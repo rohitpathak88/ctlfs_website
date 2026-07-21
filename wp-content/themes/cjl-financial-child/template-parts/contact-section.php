@@ -5,9 +5,17 @@
  * @package CTL_Financial_Child
  */
 
-$phone   = get_theme_mod( 'cjl_phone', '' );
-$email   = get_theme_mod( 'cjl_email', '' );
-$address = get_theme_mod( 'cjl_address', '' );
+// This template is a Home-only override. Other pages retain the parent
+// template so their shared contact implementation and styling are unaffected.
+if ( ! is_front_page() ) {
+	require get_template_directory() . '/template-parts/contact-section.php';
+	return;
+}
+
+$phone   = get_theme_mod( 'cjl_phone' ) ?: 'XX-XXXXX-XXXXX';
+$email   = get_theme_mod( 'cjl_email' ) ?: 'contactinformation@ctls.com';
+$address = get_theme_mod( 'cjl_address' ) ?: '7421, First Floor, Third Lane, East, India- 234532';
+$phone_href = preg_replace( '/[^0-9+]/', '', $phone );
 ?>
 
 <section id="contact" class="contact-section ctl-contact-section">
@@ -54,24 +62,24 @@ $address = get_theme_mod( 'cjl_address', '' );
 					<div class="contact-info ps-lg-5 mt-4">
 						<h3 class="mb-4 text-uppercase"><?php esc_html_e( 'Contact Info', 'cjl-financial-child' ); ?></h3>
 						<hr>
-						<?php if ( $phone ) : ?>
-							<div class="mb-4">
-								<small class="lead text-uppercase mb-2"><?php esc_html_e( 'Phone', 'cjl-financial-child' ); ?></small>
-								<p><a href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $phone ) ); ?>"><?php echo esc_html( $phone ); ?></a></p>
-							</div>
-						<?php endif; ?>
-						<?php if ( $email ) : ?>
-							<div class="mb-4">
-								<small class="lead text-uppercase mb-2"><?php esc_html_e( 'Email Address', 'cjl-financial-child' ); ?></small>
-								<p><a href="mailto:<?php echo esc_attr( antispambot( $email ) ); ?>"><?php echo esc_html( antispambot( $email ) ); ?></a></p>
-							</div>
-						<?php endif; ?>
-						<?php if ( $address ) : ?>
-							<div>
-								<small class="lead text-uppercase mb-2"><?php esc_html_e( 'Service Area', 'cjl-financial-child' ); ?></small>
-								<p><?php echo wp_kses_post( nl2br( esc_html( $address ) ) ); ?></p>
-							</div>
-						<?php endif; ?>
+						<div class="mb-4">
+							<small class="lead text-uppercase mb-2"><?php esc_html_e( 'Phone', 'cjl-financial-child' ); ?></small>
+							<p>
+								<?php if ( preg_match( '/\d/', $phone_href ) ) : ?>
+									<a href="tel:<?php echo esc_attr( $phone_href ); ?>"><?php echo esc_html( $phone ); ?></a>
+								<?php else : ?>
+									<?php echo esc_html( $phone ); ?>
+								<?php endif; ?>
+							</p>
+						</div>
+						<div class="mb-4">
+							<small class="lead text-uppercase mb-2"><?php esc_html_e( 'Email Address', 'cjl-financial-child' ); ?></small>
+							<p><a href="mailto:<?php echo esc_attr( antispambot( $email ) ); ?>"><?php echo esc_html( antispambot( $email ) ); ?></a></p>
+						</div>
+						<div>
+							<small class="lead text-uppercase mb-2"><?php esc_html_e( 'Service Area', 'cjl-financial-child' ); ?></small>
+							<p><?php echo wp_kses_post( nl2br( esc_html( $address ) ) ); ?></p>
+						</div>
 					</div>
 				</div>
 			</div>

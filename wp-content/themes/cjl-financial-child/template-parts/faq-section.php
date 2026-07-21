@@ -19,7 +19,7 @@ $faqs = ctl_financial_home_content()['faq'];
 				<?php $is_first = 0 === $index; ?>
 				<article class="accordion-item bg-transparent border-secondary pb-3">
 					<h3 class="accordion-header align-items-center d-flex m-0" id="faqHeading<?php echo esc_attr( $index + 1 ); ?>">
-						<span class="faq-number fw-bold" aria-hidden="true"><?php echo esc_html( $index + 1 ); ?>-</span>
+						<span class="faq-number fw-bold" aria-hidden="true"><?php echo esc_html( str_pad( (string) ( $index + 1 ), 2, '0', STR_PAD_LEFT ) ); ?>-</span>
 						<button class="text-break accordion-button bg-transparent text-white shadow-none<?php echo $is_first ? '' : ' collapsed'; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#faq<?php echo esc_attr( $index + 1 ); ?>" aria-expanded="<?php echo $is_first ? 'true' : 'false'; ?>" aria-controls="faq<?php echo esc_attr( $index + 1 ); ?>">
 							<?php echo esc_html( $faq[0] ); ?>
 						</button>

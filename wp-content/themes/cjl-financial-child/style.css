@@ -82,19 +82,44 @@ body.home .ctl-home-hero__right-shape {
 	width: 675px;
 }
 
-body.home .ctl-home-hero .container,
-body.home .ctl-home-hero .hero-image {
+body.home .ctl-home-hero .row > .col-lg-7 {
 	position: relative;
 	z-index: 1;
 }
 
 body.home .ctl-home-hero .hero-image {
-	right: auto;
+	bottom: 0;
+	position: absolute;
+	right: 0;
+	z-index: 1;
 }
 
 body.home .ctl-home-hero .banner-men-image {
-	max-height: 684px;
+	display: block;
+	height: 683px;
+	max-height: none;
 	object-fit: contain;
+	width: 456px;
+}
+
+body.home .ctl-home-hero .btn-explore {
+	align-items: center;
+	display: inline-flex;
+	height: 50px;
+	justify-content: center;
+	padding: 0 18px;
+	text-align: center;
+}
+
+body.home .ctl-home-hero .btn-explore::before {
+	bottom: -5px;
+	left: 5px;
+	right: -5px;
+	top: 5px;
+}
+
+body.home .ctl-home-hero .hero-actions > .btn-explore:first-child {
+	min-width: 277px;
 }
 
 body.home .ctl-marquee .marquee-track {
@@ -122,24 +147,158 @@ body.home .ctl-services-section {
 	background-image: url("../cjl-financial/assets/img/home_banner_bottom_color_gradient.png");
 	background-position: bottom;
 	background-repeat: no-repeat;
+	scroll-margin-top: 180px;
+	overflow: visible;
 }
 
-body.home .service-card {
+body.home .ctl-services-section .services-grid {
+	margin: 0 auto;
+	max-width: 1240px;
+	overflow: visible;
+}
+
+body.home .ctl-services-grid__row {
+	display: grid;
+	gap: 20px;
+	margin: 0 auto 20px;
+}
+
+body.home .ctl-services-grid__row--three {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body.home .ctl-services-grid__row--two {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	max-width: 820px;
+}
+
+body.home .ctl-service-card {
+	background: #1a1a1a;
+	border-radius: 25px;
+	display: flex;
+	flex-direction: column;
+	height: 470px;
 	opacity: 1;
+	overflow: hidden;
+	position: relative;
 	transform: none;
 }
 
-body.home .service-card .card-body {
-	padding-bottom: 2rem;
+body.home .ctl-service-card__top-decoration {
+	display: block;
+	height: 54px;
+	margin: 0 auto;
+	object-fit: contain;
+	width: 304px;
 }
 
-body.home .service-card .card-body a {
-	font-size: 14px;
-	font-weight: 500;
+body.home .ctl-service-card__body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	padding: 13px 33px 32px;
+}
+
+body.home .ctl-service-card__icon {
+	align-items: center;
+	background: rgba(146, 57, 35, 0.3);
+	border-radius: 50%;
+	display: flex;
+	height: 78px;
+	justify-content: center;
+	margin-bottom: 40px;
+	width: 78px;
+}
+
+body.home .ctl-service-card__icon img {
+	height: 36px;
+	width: 36px;
+}
+
+body.home .ctl-service-card h3 {
+	font-size: 34px;
+	font-weight: 400;
+	line-height: 1.3;
+	margin: 0;
+	min-height: 95px;
+}
+
+body.home .ctl-service-card p {
+	color: #d5d5d5;
+	font-size: 18px;
+	line-height: 28px;
+	margin: 10px 0 0;
+}
+
+body.home .ctl-service-card__link {
+	margin-top: auto;
+	padding-top: 16px;
+	width: max-content;
+}
+
+body.home .ctl-service-card__link img {
+	display: block;
+	height: 13px;
+	width: 26px;
+}
+
+body.home .ctl-services-section .services-grid .corner-label {
+	letter-spacing: 4px;
+	text-transform: uppercase;
 }
 
 body.home .ctl-about-us {
 	scroll-margin-top: 110px;
+}
+
+/*
+ * Home About section: desktop geometry taken from the 1440px Figma frame.
+ * The 1300px content container starts at x=70. The 557px visual, 68px
+ * gutter, and content column therefore begin at x=695.
+ */
+body.home .ctl-about-us__layout {
+	align-items: start;
+	display: grid;
+	gap: 68px;
+	grid-template-columns: 557px minmax(0, 1fr);
+}
+
+body.home .ctl-about-us__visual {
+	height: 628px;
+	overflow: hidden;
+}
+
+body.home .ctl-about-us__image {
+	border-radius: 25px;
+	display: block;
+	height: 628px;
+	object-fit: cover;
+	width: 557px;
+}
+
+body.home .ctl-about-us__content {
+	padding-top: 38px;
+}
+
+body.home .ctl-about-us .title {
+	line-height: 1.28;
+	margin-bottom: 18px !important;
+}
+
+body.home .ctl-about-us > .ctl-about-us__layout > .ctl-about-us__content > .lead {
+	line-height: 1.55;
+	margin-bottom: 0;
+	max-width: 675px;
+}
+
+body.home .ctl-about-us .about-content {
+	margin-top: 50px;
+	padding-left: 49px;
+	padding-top: 46px;
+}
+
+body.home .ctl-about-us .about-content .about-block {
+	max-width: 626px;
 }
 
 body.home .ctl-about-us .about-content .about-block + .about-block {
@@ -149,6 +308,30 @@ body.home .ctl-about-us .about-content .about-block + .about-block {
 body.home .ctl-about-us .about-content .about-block h3 {
 	font-size: 28px;
 	line-height: 1.2;
+}
+
+@media (max-width: 1399.98px) {
+	body.home .ctl-about-us__layout {
+		gap: 48px;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	}
+
+	body.home .ctl-about-us__visual,
+	body.home .ctl-about-us__image {
+		height: auto;
+		aspect-ratio: 557 / 628;
+		width: 100%;
+	}
+}
+
+@media (max-width: 991.98px) {
+	body.home .ctl-about-us__layout {
+		grid-template-columns: 1fr;
+	}
+
+	body.home .ctl-about-us__content {
+		padding-top: 0;
+	}
 }
 
 body.home .ctl-differentiators {
@@ -162,7 +345,23 @@ body.home .ctl-differentiators__center {
 }
 
 body.home .ctl-differentiators__center h2 {
+	font-size: 36px;
 	margin: 1.5rem auto 1rem;
+}
+
+body.home .ctl-differentiators__center .lead {
+	font-size: 18px;
+	line-height: 28px;
+	margin-bottom: 1.5rem;
+}
+
+body.home .why-choose-section .why-choose-card .number {
+	line-height: 1.1;
+}
+
+body.home .why-choose-section .why-choose-card .title {
+	font-size: 26px;
+	line-height: 1.32;
 }
 
 body.home .ctl-alliances-section {
@@ -176,6 +375,46 @@ body.home .ctl-worldwide-trust {
 	background-position: top center, bottom center;
 	background-repeat: no-repeat;
 	background-size: 100% auto;
+	overflow: hidden;
+	padding: 140px 0 80px;
+}
+
+body.home .ctl-worldwide-trust__intro {
+	max-width: 760px;
+}
+
+body.home .ctl-worldwide-trust__intro .title {
+	font-size: 50px;
+	line-height: 1.2;
+}
+
+body.home .ctl-worldwide-trust__intro .lead {
+	color: #d5d5d5;
+	font-size: 18px;
+	line-height: 28px;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 700px;
+}
+
+body.home .ctl-worldwide-trust__map {
+	margin: 0 auto;
+	max-width: 1140px;
+	position: relative;
+	width: 100%;
+}
+
+body.home .ctl-worldwide-trust__map-image {
+	display: block;
+	height: auto;
+	margin: 0 auto;
+	width: 100%;
+}
+
+@media (max-width: 767.98px) {
+	body.home .ctl-worldwide-trust__intro .title {
+		font-size: 36px;
+	}
 }
 
 body.home .faq-section {
@@ -202,7 +441,38 @@ body.home .ctl-contact-section .ctl-contact-section__panel {
 	background-repeat: no-repeat;
 }
 
-body.home .ctl-contact-form__trap {
+body.home .ctl-contact-section {
+	scroll-margin-top: 180px;
+}
+
+body.home .ctl-contact-section .contact-info h3 {
+	font-size: 30px;
+	font-weight: 500;
+	letter-spacing: 0;
+	line-height: 40px;
+}
+
+body.home .ctl-contact-section .contact-info hr {
+	border-color: #4c4c4c;
+	margin: 0 0 28px;
+	opacity: 1;
+}
+
+body.home .ctl-contact-section .contact-info small {
+	color: #d5d5d5;
+	display: block;
+	font-size: 18px;
+	line-height: 28px;
+}
+
+body.home .ctl-contact-section .contact-info p {
+	color: #fff;
+	font-size: 18px;
+	line-height: 28px;
+	margin: 0;
+}
+
+.ctl-contact-form__trap {
 	height: 0;
 	left: -9999px;
 	overflow: hidden;
@@ -234,6 +504,18 @@ body.home .ctl-contact-section .contact-info a {
 	text-underline-offset: 4px;
 }
 
+@media (min-width: 1200px) {
+	body.home .ctl-home-hero .hero-image {
+		right: 50px;
+	}
+}
+
+@media (min-width: 1400px) {
+	body.home .ctl-home-hero .hero-image {
+		right: 168px;
+	}
+}
+
 @media (max-width: 991.98px) {
 	body.home .ctl-home-hero {
 		min-height: 0;
@@ -246,11 +528,31 @@ body.home .ctl-contact-section .contact-info a {
 	}
 
 	body.home .ctl-home-hero .hero-image {
+		bottom: auto;
 		margin: 2rem auto 0;
+		position: relative;
+		right: auto;
 	}
 
 	body.home .ctl-home-hero .banner-men-image {
+		height: auto;
 		max-height: 500px;
+		width: auto;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+	body.home .ctl-services-grid__row--three,
+	body.home .ctl-services-grid__row--two {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		max-width: 820px;
+	}
+
+	body.home .ctl-services-grid__row--three > :nth-child(3) {
+		grid-column: 1 / -1;
+		margin: 0 auto;
+		max-width: 400px;
+		width: 100%;
 	}
 }
 
@@ -288,6 +590,23 @@ body.home .ctl-contact-section .contact-info a {
 	body.home .worldwide-trust-section,
 	body.home .faq-section {
 		padding: 72px 0;
+	}
+
+	body.home .ctl-services-grid__row,
+	body.home .ctl-services-grid__row--three,
+	body.home .ctl-services-grid__row--two {
+		grid-template-columns: 1fr;
+		max-width: 400px;
+	}
+
+	body.home .ctl-service-card {
+		height: auto;
+		min-height: 440px;
+	}
+
+	body.home .ctl-service-card h3 {
+		font-size: 30px;
+		min-height: 0;
 	}
 
 	body.home .ctl-about-us .about-content .about-block + .about-block {

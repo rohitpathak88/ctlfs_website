@@ -104,12 +104,14 @@ function ctl_financial_home_content() {
 			array( 'Do you support cross-jurisdictional fund operations?', 'Yes. We support multi-jurisdictional fund operations, ensuring alignment with local regulatory requirements while maintaining global operational consistency.' ),
 			array( 'What investor servicing capabilities do you provide?', 'We deliver secure investor servicing and reporting solutions, including capital activity management, performance reporting, and customized institutional disclosures.' ),
 			array( 'What is your role in regulatory compliance?', 'We provide ongoing compliance monitoring, regulatory filings, and governance coordination, in alignment with jurisdiction-specific mandates and evolving regulatory standards.' ),
+			/*
 			array( 'Do you provide fund formation and launch support?', 'Yes. We provide fund setup and structuring support, including operational framework design and coordination with legal and advisory service providers.' ),
 			array( 'How does your service model differ from traditional administrators?', 'Our model integrates institutional governance, advanced technology, and partnership-driven engagement, designed to deliver scalable and risk-aware fund infrastructure.' ),
 			array( 'What measures are in place to ensure data security?', 'We operate under advanced data security and access control protocols, supported by secure digital environments and confidentiality safeguards.' ),
 			array( 'What is your service delivery methodology?', 'Our delivery methodology follows a disciplined four-stage framework: Understand, Design, Execute, and Support.' ),
 			array( 'Are services scalable over time?', 'Yes. Our operating model is designed to support scalability and long-term operational sustainability.' ),
 			array( 'How may prospective clients initiate engagement?', 'Engagements typically begin with a confidential consultation to assess requirements and define an appropriate service framework.' ),
+			*/
 		),
 		'final_cta'       => array(
 			'title'       => 'Built for Institutional Excellence.',

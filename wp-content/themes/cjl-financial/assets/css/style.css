@@ -79,13 +79,10 @@ p {
     color: transparent;
 }
 
-/* The grey gradient tile repeats per text line (1.2em = heading line-height),
-   so multi-line and single-line headings render identical colors instead of
-   the second line looking darker than the first (client-reported issue). */
+/* Two-tone headings per Figma: the gradient spans the whole text block, so
+   the first line renders white and following lines fade to grey. */
 .back_white_text_gradient {
     background: linear-gradient(to top, #616161, #ffffff);
-    background-size: 100% 1.2em;
-    background-repeat: repeat-y;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

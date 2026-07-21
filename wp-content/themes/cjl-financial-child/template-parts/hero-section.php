@@ -19,7 +19,6 @@ $hero    = $content['hero'];
 				<p class="lead mb-4"><?php echo esc_html( $hero['description'] ); ?></p>
 				<div class="hero-actions d-flex flex-wrap gap-4 mt-4">
 					<a href="#contact" class="btn-explore"><?php echo esc_html( $hero['primary_cta'] ); ?></a>
-					<a href="#services" class="btn-explore btn-explore-secondary"><?php echo esc_html( $hero['second_cta'] ); ?></a>
 				</div>
 			</div>
 			<div class="col-lg-5">
