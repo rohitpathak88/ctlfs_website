@@ -19,16 +19,42 @@
 			window.addEventListener( 'scroll', setNavbarState, { passive: true } );
 		}
 
-		document.querySelectorAll( 'a[href^="#"]' ).forEach( function( link ) {
+		document.querySelectorAll( 'a[href*="#"]' ).forEach( function( link ) {
 			link.addEventListener( 'click', function( event ) {
-				var targetId = link.getAttribute( 'href' );
-				var target = targetId ? document.querySelector( targetId ) : null;
+				var href = link.getAttribute( 'href' );
+				if ( ! href ) {
+					return;
+				}
 
+				var hashIndex = href.indexOf( '#' );
+				if ( hashIndex === -1 ) {
+					return;
+				}
+
+				var hash = href.slice( hashIndex );
+				if ( '#' === hash || '#site-content' === hash ) {
+					return;
+				}
+
+				var linkUrl;
+				try {
+					linkUrl = new URL( href, window.location.href );
+				} catch ( error ) {
+					return;
+				}
+
+				var samePage = linkUrl.pathname.replace( /\/$/, '' ) === window.location.pathname.replace( /\/$/, '' );
+				if ( ! samePage ) {
+					return;
+				}
+
+				var target = document.querySelector( hash );
 				if ( ! target ) {
 					return;
 				}
 
 				event.preventDefault();
+				history.pushState( null, '', hash );
 				target.scrollIntoView( {
 					behavior: window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ? 'auto' : 'smooth',
 					block: 'start'
@@ -37,6 +63,18 @@
 				target.focus( { preventScroll: true } );
 			} );
 		} );
+
+		if ( window.location.hash ) {
+			var initial = document.querySelector( window.location.hash );
+			if ( initial ) {
+				window.setTimeout( function() {
+					initial.scrollIntoView( {
+						behavior: window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ? 'auto' : 'smooth',
+						block: 'start'
+					} );
+				}, 50 );
+			}
+		}
 
 		var contactForm = document.querySelector( '#ctlContactForm' );
 

@@ -14,6 +14,7 @@ get_template_part( 'template-parts/hero-section' );
 get_template_part( 'template-parts/marquee-section' );
 get_template_part( 'template-parts/services-section' );
 get_template_part( 'template-parts/why-choose-us-section' );
+get_template_part( 'template-parts/team-section' );
 get_template_part( 'template-parts/map-section' );
 get_template_part( 'template-parts/faq-section' );
 get_template_part( 'template-parts/contact-section' );

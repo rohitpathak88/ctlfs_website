@@ -9,7 +9,125 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once get_stylesheet_directory() . '/inc/service-content.php';
 require_once get_stylesheet_directory() . '/inc/home-content.php';
+
+/**
+ * Free the /services/ URL prefix for hierarchical service pages.
+ * The parent theme registers a CPT with the same slug, which otherwise 404s pages.
+ */
+function ctl_financial_child_remap_services_cpt( $args, $post_type ) {
+	if ( 'services' !== $post_type ) {
+		return $args;
+	}
+
+	$args['rewrite']     = array( 'slug' => 'service' );
+	$args['has_archive'] = false;
+	return $args;
+}
+add_filter( 'register_post_type_args', 'ctl_financial_child_remap_services_cpt', 20, 2 );
+
+/**
+ * Create/update Services parent + five detail pages and publish Privacy Policy.
+ */
+function ctl_financial_child_ensure_navigation_pages() {
+	if ( get_option( 'ctl_nav_pages_version' ) === '1.3.0' ) {
+		return;
+	}
+
+	$parent = get_page_by_path( 'services' );
+	if ( ! $parent ) {
+		$parent_id = wp_insert_post(
+			array(
+				'post_title'   => 'Services',
+				'post_name'    => 'services',
+				'post_status'  => 'publish',
+				'post_type'    => 'page',
+				'post_content' => '',
+			),
+			true
+		);
+	} else {
+		$parent_id = (int) $parent->ID;
+	}
+
+	if ( is_wp_error( $parent_id ) || ! $parent_id ) {
+		return;
+	}
+
+	update_post_meta( $parent_id, '_wp_page_template', 'default' );
+
+	$catalog = ctl_financial_service_catalog();
+	foreach ( $catalog as $slug => $service ) {
+		$existing = get_page_by_path( 'services/' . $slug );
+		if ( ! $existing ) {
+			$existing = get_page_by_path( $slug );
+		}
+
+		$page_data = array(
+			'post_title'   => $service['title'],
+			'post_name'    => $slug,
+			'post_status'  => 'publish',
+			'post_type'    => 'page',
+			'post_parent'  => $parent_id,
+			'post_excerpt' => $service['subtitle'],
+			'post_content' => implode( "\n\n", $service['intro'] ),
+		);
+
+		if ( $existing ) {
+			$page_data['ID'] = (int) $existing->ID;
+			$page_id         = wp_update_post( $page_data, true );
+		} else {
+			$page_id = wp_insert_post( $page_data, true );
+		}
+
+		if ( ! is_wp_error( $page_id ) && $page_id ) {
+			update_post_meta( $page_id, '_wp_page_template', 'template-service-detail.php' );
+		}
+	}
+
+	$privacy = get_page_by_path( 'privacy-policy' );
+	if ( $privacy && 'publish' !== $privacy->post_status ) {
+		wp_update_post(
+			array(
+				'ID'          => (int) $privacy->ID,
+				'post_status' => 'publish',
+			)
+		);
+	}
+
+	if ( $privacy ) {
+		update_option( 'wp_page_for_privacy_policy', (int) $privacy->ID );
+	}
+
+	delete_option( 'rewrite_rules' );
+	flush_rewrite_rules( false );
+	update_option( 'ctl_nav_pages_version', '1.3.0' );
+}
+add_action( 'init', 'ctl_financial_child_ensure_navigation_pages', 30 );
+
+/**
+ * Turn the empty Services parent page into a simple index of detail pages.
+ */
+function ctl_financial_child_services_parent_content( $content ) {
+	if ( ! is_page( 'services' ) || ! in_the_loop() || ! is_main_query() ) {
+		return $content;
+	}
+
+	$page = get_queried_object();
+	if ( ! $page || (int) $page->post_parent !== 0 ) {
+		return $content;
+	}
+
+	$catalog = ctl_financial_service_catalog();
+	$items   = '';
+	foreach ( $catalog as $slug => $service ) {
+		$items .= '<li><a href="' . esc_url( ctl_financial_service_url( $slug ) ) . '">' . esc_html( $service['title'] ) . '</a></li>';
+	}
+
+	return '<p>' . esc_html__( 'Explore our institutional fund services:', 'cjl-financial-child' ) . '</p><ul>' . $items . '</ul>';
+}
+add_filter( 'the_content', 'ctl_financial_child_services_parent_content' );
 
 /**
  * Replace the parent contact endpoint on the Home page with a validated,
@@ -82,14 +200,6 @@ function ctl_financial_child_enqueue_assets() {
 		wp_get_theme()->get( 'Version' )
 	);
 
-	if ( ! is_front_page() ) {
-		return;
-	}
-
-	// The parent script initially hides Home content; use a progressive
-	// enhancement script that never makes content dependent on JavaScript.
-	wp_dequeue_script( 'cjl-main-script' );
-
 	wp_enqueue_script(
 		'ctl-financial-home',
 		get_stylesheet_directory_uri() . '/assets/js/home.js',
@@ -98,15 +208,21 @@ function ctl_financial_child_enqueue_assets() {
 		true
 	);
 
-	wp_localize_script(
-		'ctl-financial-home',
-		'ctlHome',
-		array(
-			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			'sending' => __( 'Sending…', 'cjl-financial-child' ),
-			'submit'  => __( 'Submit', 'cjl-financial-child' ),
-			'error'   => __( 'Something went wrong. Please try again.', 'cjl-financial-child' ),
-		)
-	);
+	if ( is_front_page() ) {
+		// The parent script initially hides Home content; use a progressive
+		// enhancement script that never makes content dependent on JavaScript.
+		wp_dequeue_script( 'cjl-main-script' );
+
+		wp_localize_script(
+			'ctl-financial-home',
+			'ctlHome',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'sending' => __( 'Sending…', 'cjl-financial-child' ),
+				'submit'  => __( 'Submit', 'cjl-financial-child' ),
+				'error'   => __( 'Something went wrong. Please try again.', 'cjl-financial-child' ),
+			)
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'ctl_financial_child_enqueue_assets', 100 );

@@ -196,7 +196,8 @@ body.home .ctl-service-card__body {
 	display: flex;
 	flex: 1;
 	flex-direction: column;
-	padding: 13px 33px 32px;
+	min-height: 0;
+	padding: 13px 33px 56px;
 }
 
 body.home .ctl-service-card__icon {
@@ -204,6 +205,7 @@ body.home .ctl-service-card__icon {
 	background: rgba(146, 57, 35, 0.3);
 	border-radius: 50%;
 	display: flex;
+	flex-shrink: 0;
 	height: 78px;
 	justify-content: center;
 	margin-bottom: 40px;
@@ -216,6 +218,7 @@ body.home .ctl-service-card__icon img {
 }
 
 body.home .ctl-service-card h3 {
+	flex-shrink: 0;
 	font-size: 34px;
 	font-weight: 400;
 	line-height: 1.3;
@@ -224,16 +227,26 @@ body.home .ctl-service-card h3 {
 }
 
 body.home .ctl-service-card p {
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 4;
 	color: #d5d5d5;
+	display: -webkit-box;
 	font-size: 18px;
 	line-height: 28px;
 	margin: 10px 0 0;
+	overflow: hidden;
 }
 
+/* Keep the arrow pinned in the card footer so long copy cannot clip it. */
 body.home .ctl-service-card__link {
-	margin-top: auto;
-	padding-top: 16px;
+	bottom: 28px;
+	flex-shrink: 0;
+	left: 33px;
+	line-height: 0;
+	margin-top: 0;
+	position: absolute;
 	width: max-content;
+	z-index: 2;
 }
 
 body.home .ctl-service-card__link img {
@@ -334,10 +347,29 @@ body.home .ctl-about-us .about-content .about-block h3 {
 	}
 }
 
-body.home .ctl-differentiators {
-	background-image: url("../cjl-financial/assets/img/home_banner_bottom_color_gradient.png");
-	background-position: bottom;
-	background-repeat: no-repeat;
+body.home .ctl-team-section {
+	padding: 120px 0;
+}
+
+body.home .ctl-team-section .lead {
+	color: #d5d5d5;
+	font-size: 18px;
+	line-height: 28px;
+}
+
+.ctl-footer-menu a:hover,
+.ctl-footer-menu a:focus-visible {
+	color: #ff704c !important;
+}
+
+.ctl-service-process-step .number {
+	font-size: 40px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+body.page-template-template-service-detail .faq-section {
+	padding: 100px 0;
 }
 
 body.home .ctl-differentiators__center {
