@@ -1,6 +1,6 @@
 <?php
 /**
- * Child theme header — homepage section anchors only.
+ * Child theme header with About Us dropdown (About Us + Teams).
  *
  * @package CTL_Financial_Child
  */
@@ -9,15 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$home_url = trailingslashit( home_url( '/' ) );
-$nav_items = array(
-	array( 'label' => __( 'Home', 'cjl-financial-child' ), 'href' => $home_url . '#home', 'id' => 'home' ),
-	array( 'label' => __( 'About Us', 'cjl-financial-child' ), 'href' => $home_url . '#about', 'id' => 'about' ),
-	array( 'label' => __( 'Services', 'cjl-financial-child' ), 'href' => $home_url . '#services', 'id' => 'services' ),
-	array( 'label' => __( 'Why Choose Us', 'cjl-financial-child' ), 'href' => $home_url . '#why-choose-us', 'id' => 'why-choose-us' ),
-	array( 'label' => __( 'Our Team', 'cjl-financial-child' ), 'href' => $home_url . '#our-team', 'id' => 'our-team' ),
-	array( 'label' => __( 'Contact', 'cjl-financial-child' ), 'href' => $home_url . '#contact', 'id' => 'contact' ),
-);
+$home_url   = trailingslashit( home_url( '/' ) );
+$about_url  = home_url( '/about-us/' );
+$teams_url  = home_url( '/teams/' );
+$is_about   = is_page( 'about-us' );
+$is_teams   = is_page( 'teams' );
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -49,15 +45,39 @@ $nav_items = array(
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav ms-auto">
-					<?php foreach ( $nav_items as $item ) : ?>
-						<?php
-						$is_active = is_front_page() && 'home' === $item['id'];
-						?>
-						<li class="nav-item">
-							<a class="nav-link<?php echo $is_active ? ' active' : ''; ?>" href="<?php echo esc_url( $item['href'] ); ?>"><?php echo esc_html( $item['label'] ); ?></a>
-						</li>
-					<?php endforeach; ?>
+				<ul class="navbar-nav ms-auto align-items-lg-center">
+					<li class="nav-item">
+						<a class="nav-link<?php echo is_front_page() ? ' active' : ''; ?>" href="<?php echo esc_url( $home_url . '#home' ); ?>"><?php esc_html_e( 'Home', 'cjl-financial-child' ); ?></a>
+					</li>
+					<li class="nav-item dropdown">
+						<a
+							class="nav-link dropdown-toggle<?php echo ( $is_about || $is_teams ) ? ' active' : ''; ?>"
+							href="<?php echo esc_url( $about_url ); ?>"
+							id="aboutDropdown"
+							role="button"
+							data-bs-toggle="dropdown"
+							aria-expanded="false"
+						>
+							<?php esc_html_e( 'About Us', 'cjl-financial-child' ); ?>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-dark ctl-nav-dropdown" aria-labelledby="aboutDropdown">
+							<li>
+								<a class="dropdown-item<?php echo $is_about ? ' active' : ''; ?>" href="<?php echo esc_url( $about_url ); ?>"><?php esc_html_e( 'About Us', 'cjl-financial-child' ); ?></a>
+							</li>
+							<li>
+								<a class="dropdown-item<?php echo $is_teams ? ' active' : ''; ?>" href="<?php echo esc_url( $teams_url ); ?>"><?php esc_html_e( 'Teams', 'cjl-financial-child' ); ?></a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="<?php echo esc_url( $home_url . '#services' ); ?>"><?php esc_html_e( 'Services', 'cjl-financial-child' ); ?></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="<?php echo esc_url( $home_url . '#why-choose-us' ); ?>"><?php esc_html_e( 'Why Choose Us', 'cjl-financial-child' ); ?></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="<?php echo esc_url( $home_url . '#contact' ); ?>"><?php esc_html_e( 'Contact', 'cjl-financial-child' ); ?></a>
+					</li>
 				</ul>
 			</div>
 		</div>

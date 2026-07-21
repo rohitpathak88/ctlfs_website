@@ -17,16 +17,16 @@ if ( ! $privacy_url ) {
 
 $footer_links = array(
 	array( 'label' => __( 'Home', 'cjl-financial-child' ), 'href' => $home_url . '#home' ),
-	array( 'label' => __( 'About Us', 'cjl-financial-child' ), 'href' => $home_url . '#about' ),
+	array( 'label' => __( 'About Us', 'cjl-financial-child' ), 'href' => home_url( '/about-us/' ) ),
 	array( 'label' => __( 'Services', 'cjl-financial-child' ), 'href' => $home_url . '#services' ),
 	array( 'label' => __( 'Why Choose Us', 'cjl-financial-child' ), 'href' => $home_url . '#why-choose-us' ),
-	array( 'label' => __( 'Our Team', 'cjl-financial-child' ), 'href' => $home_url . '#our-team' ),
+	array( 'label' => __( 'Our Team', 'cjl-financial-child' ), 'href' => home_url( '/teams/' ) ),
 	array( 'label' => __( 'Privacy Policy', 'cjl-financial-child' ), 'href' => $privacy_url ),
 );
 ?>
 	</main>
 
-	<?php if ( ! is_page_template( 'template-service-detail.php' ) ) : ?>
+	<?php if ( ! is_page_template( 'template-service-detail.php' ) && ! is_page_template( 'template-privacy-policy.php' ) && ! is_page_template( 'template-about-us.php' ) ) : ?>
 	<section class="newsletter-section">
 		<div class="container custom_container">
 			<div class="row align-items-center">

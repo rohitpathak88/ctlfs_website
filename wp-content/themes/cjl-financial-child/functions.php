@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once get_stylesheet_directory() . '/inc/service-content.php';
 require_once get_stylesheet_directory() . '/inc/home-content.php';
+require_once get_stylesheet_directory() . '/inc/privacy-content.php';
 
 /**
  * Free the /services/ URL prefix for hierarchical service pages.
@@ -31,7 +32,7 @@ add_filter( 'register_post_type_args', 'ctl_financial_child_remap_services_cpt',
  * Create/update Services parent + five detail pages and publish Privacy Policy.
  */
 function ctl_financial_child_ensure_navigation_pages() {
-	if ( get_option( 'ctl_nav_pages_version' ) === '1.3.0' ) {
+	if ( get_option( 'ctl_nav_pages_version' ) === '1.6.0' ) {
 		return;
 	}
 
@@ -100,9 +101,76 @@ function ctl_financial_child_ensure_navigation_pages() {
 		update_option( 'wp_page_for_privacy_policy', (int) $privacy->ID );
 	}
 
+	$teams = get_page_by_path( 'teams' );
+	$team_content = ctl_financial_home_content()['team'];
+	$teams_data   = array(
+		'post_title'   => 'Teams',
+		'post_name'    => 'teams',
+		'post_status'  => 'publish',
+		'post_type'    => 'page',
+		'post_excerpt' => isset( $team_content['description'] ) ? $team_content['description'] : '',
+		'post_content' => isset( $team_content['expertise'] ) ? $team_content['expertise'] : '',
+	);
+
+	if ( $teams ) {
+		$teams_data['ID'] = (int) $teams->ID;
+		$teams_id         = wp_update_post( $teams_data, true );
+	} else {
+		$teams_id = wp_insert_post( $teams_data, true );
+	}
+
+	if ( ! is_wp_error( $teams_id ) && $teams_id ) {
+		update_post_meta( $teams_id, '_wp_page_template', 'template-teams.php' );
+	}
+
+	$privacy_page = get_page_by_path( 'privacy-policy' );
+	$privacy_copy = ctl_financial_privacy_content();
+	$privacy_data = array(
+		'post_title'   => $privacy_copy['title'],
+		'post_name'    => 'privacy-policy',
+		'post_status'  => 'publish',
+		'post_type'    => 'page',
+		'post_content' => $privacy_copy['intro'],
+		'post_excerpt' => $privacy_copy['intro'],
+	);
+
+	if ( $privacy_page ) {
+		$privacy_data['ID'] = (int) $privacy_page->ID;
+		$privacy_id         = wp_update_post( $privacy_data, true );
+	} else {
+		$privacy_id = wp_insert_post( $privacy_data, true );
+	}
+
+	if ( ! is_wp_error( $privacy_id ) && $privacy_id ) {
+		update_post_meta( $privacy_id, '_wp_page_template', 'template-privacy-policy.php' );
+		update_option( 'wp_page_for_privacy_policy', (int) $privacy_id );
+	}
+
+	$about_page    = get_page_by_path( 'about-us' );
+	$about_content = ctl_financial_home_content()['about'];
+	$about_data    = array(
+		'post_title'   => 'About Us',
+		'post_name'    => 'about-us',
+		'post_status'  => 'publish',
+		'post_type'    => 'page',
+		'post_excerpt' => isset( $about_content['title'] ) ? $about_content['title'] : '',
+		'post_content' => isset( $about_content['description'] ) ? $about_content['description'] : '',
+	);
+
+	if ( $about_page ) {
+		$about_data['ID'] = (int) $about_page->ID;
+		$about_id         = wp_update_post( $about_data, true );
+	} else {
+		$about_id = wp_insert_post( $about_data, true );
+	}
+
+	if ( ! is_wp_error( $about_id ) && $about_id ) {
+		update_post_meta( $about_id, '_wp_page_template', 'template-about-us.php' );
+	}
+
 	delete_option( 'rewrite_rules' );
 	flush_rewrite_rules( false );
-	update_option( 'ctl_nav_pages_version', '1.3.0' );
+	update_option( 'ctl_nav_pages_version', '1.6.0' );
 }
 add_action( 'init', 'ctl_financial_child_ensure_navigation_pages', 30 );
 
