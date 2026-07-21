@@ -49,9 +49,6 @@ function cjl_financial_scripts() {
     // Enqueue Bootstrap CSS
     wp_enqueue_style('bootstrap-css', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css', array(), '5.3.0');
     
-    // Enqueue Font Awesome
-    wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0');
-    
     // Enqueue Google Fonts
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), null);
     
@@ -70,6 +67,19 @@ function cjl_financial_scripts() {
     ));
 }
 add_action('wp_enqueue_scripts', 'cjl_financial_scripts');
+
+/**
+ * Preconnect to font/CDN origins for faster first paint.
+ */
+function cjl_financial_resource_hints($urls, $relation_type) {
+    if ('preconnect' === $relation_type) {
+        $urls[] = array('href' => 'https://fonts.googleapis.com', 'crossorigin');
+        $urls[] = array('href' => 'https://fonts.gstatic.com', 'crossorigin');
+        $urls[] = array('href' => 'https://cdn.jsdelivr.net', 'crossorigin');
+    }
+    return $urls;
+}
+add_filter('wp_resource_hints', 'cjl_financial_resource_hints', 10, 2);
 
 // enqueue media uploader
 add_action('admin_enqueue_scripts', function () {
@@ -150,7 +160,7 @@ function cjl_financial_register_post_types() {
         ),
         'public' => true,
         'has_archive' => true,
-        'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
+        'supports' => array('title', 'editor', 'thumbnail', 'page-attributes', 'custom-fields'),
         'menu_icon' => 'dashicons-businessman',
         'rewrite' => array('slug' => 'services'),
     ));
@@ -196,6 +206,29 @@ function cjl_financial_register_post_types() {
         'menu_icon' => 'dashicons-editor-help',
         'rewrite' => array('slug' => 'faq'),
     ));
+
+    // Marquee
+    register_post_type('marquee', array(
+        'labels' => array(
+            'name' => 'Marquee Item',
+            'singular_name' => 'Marquee',
+            'add_new' => 'Add New Marquee',
+            'add_new_item' => 'Add New Marquee',
+            'edit_item' => 'Edit Marquee',
+            'new_item' => 'New Marquee',
+            'view_item' => 'View Marquee',
+            'search_items' => 'Search Marquee Item',
+            'not_found' => 'No marquee Item found',
+            'not_found_in_trash' => 'No marquee item found in Trash'
+        ),
+        'public' => true,
+        'has_archive' => true,
+        'supports' => array('title'),
+        'menu_icon' => 'dashicons-businessman',
+        'rewrite' => array('slug' => 'marquee'),
+    ));
+
+    
 }
 add_action('init', 'cjl_financial_register_post_types');
 
@@ -624,9 +657,21 @@ function cjl_financial_customize_register($wp_customize) {
         'priority' => 25,
     ));
     
+    // Hero Eyebrow (small text above the title)
+    $wp_customize->add_setting('cjl_hero_eyebrow', array(
+        'default' => 'Discover. Develop. Deliver.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('cjl_hero_eyebrow', array(
+        'label' => __('Hero Eyebrow Text', 'cjl-financial'),
+        'section' => 'cjl_hero_section',
+        'type' => 'text',
+        'description' => __('Small uppercase text shown above the hero title.', 'cjl-financial'),
+    ));
+
     // Hero Title
     $wp_customize->add_setting('cjl_hero_title', array(
-        'default' => 'Innovative & Intelligent <br> Financial Solutions',
+        'default' => 'Elevating Global Fund Administration',
         'sanitize_callback' => 'wp_kses_post',
     ));
     $wp_customize->add_control('cjl_hero_title', array(
@@ -638,7 +683,7 @@ function cjl_financial_customize_register($wp_customize) {
     
     // Hero Description
     $wp_customize->add_setting('cjl_hero_description', array(
-        'default' => 'At CJL Client Success, Asset And Capital Focused Precision Delivering Superior Client Experiences In Accelerating Business Growth Through Research-Led Holistic Financial Capabilities.',
+        'default' => 'A technology-enabled, institutionally governed platform delivering precision fund accounting, investor servicing, regulatory assurance, and strategic structuring across global markets.',
         'sanitize_callback' => 'sanitize_textarea_field',
     ));
     $wp_customize->add_control('cjl_hero_description', array(
@@ -647,27 +692,50 @@ function cjl_financial_customize_register($wp_customize) {
         'type' => 'textarea',
     ));
     
-    // Hero Button Text
+    // Hero Primary Button Text
     $wp_customize->add_setting('cjl_hero_button_text', array(
-        'default' => 'EXPLORE MORE',
+        'default' => 'Request a Private Consultation',
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('cjl_hero_button_text', array(
-        'label' => __('Hero Button Text', 'cjl-financial'),
+        'label' => __('Hero Primary Button Text', 'cjl-financial'),
         'section' => 'cjl_hero_section',
         'type' => 'text',
     ));
     
-    // Hero Button Link
+    // Hero Primary Button Link
     $wp_customize->add_setting('cjl_hero_button_link', array(
-        'default' => '#services',
+        'default' => '#contact',
         'sanitize_callback' => 'esc_url_raw',
     ));
     $wp_customize->add_control('cjl_hero_button_link', array(
-        'label' => __('Hero Button Link', 'cjl-financial'),
+        'label' => __('Hero Primary Button Link', 'cjl-financial'),
         'section' => 'cjl_hero_section',
         'type' => 'url',
         'description' => __('Use #services, #about, #contact, etc. for anchor links or full URLs.', 'cjl-financial'),
+    ));
+
+    // Hero Secondary Button Text
+    $wp_customize->add_setting('cjl_hero_button2_text', array(
+        'default' => 'Explore Our Capabilities',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('cjl_hero_button2_text', array(
+        'label' => __('Hero Secondary Button Text', 'cjl-financial'),
+        'section' => 'cjl_hero_section',
+        'type' => 'text',
+        'description' => __('Leave empty to hide the secondary button.', 'cjl-financial'),
+    ));
+
+    // Hero Secondary Button Link
+    $wp_customize->add_setting('cjl_hero_button2_link', array(
+        'default' => '#services',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('cjl_hero_button2_link', array(
+        'label' => __('Hero Secondary Button Link', 'cjl-financial'),
+        'section' => 'cjl_hero_section',
+        'type' => 'url',
     ));
     
     // Hero Image
@@ -681,6 +749,33 @@ function cjl_financial_customize_register($wp_customize) {
         'description' => __('Upload a custom hero image. If not set, default image will be used.', 'cjl-financial'),
     )));
     
+    // Worldwide Trust / Map Section
+    $wp_customize->add_section('cjl_map_section', array(
+        'title' => __('Worldwide Trust Section', 'cjl-financial'),
+        'priority' => 32,
+    ));
+
+    $wp_customize->add_setting('cjl_map_title', array(
+        'default' => 'Worldwide Trust',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('cjl_map_title', array(
+        'label' => __('Section Title', 'cjl-financial'),
+        'section' => 'cjl_map_section',
+        'type' => 'text',
+    ));
+
+    $wp_customize->add_setting('cjl_map_desc', array(
+        'default' => '',
+        'sanitize_callback' => 'sanitize_textarea_field',
+    ));
+    $wp_customize->add_control('cjl_map_desc', array(
+        'label' => __('Section Description', 'cjl-financial'),
+        'section' => 'cjl_map_section',
+        'type' => 'textarea',
+        'description' => __('Optional text shown under the title. Leave empty to hide.', 'cjl-financial'),
+    ));
+
     // Our Fresh News Section
     $wp_customize->add_section('cjl_news_section', array(
         'title' => __('Our Fresh News', 'cjl-financial'),
@@ -896,6 +991,7 @@ function cjl_financial_customize_register($wp_customize) {
         'type' => 'url',
         'priority' => 35,
     ));
+    
 }
 add_action('customize_register', 'cjl_financial_customize_register');
 
@@ -905,3 +1001,217 @@ add_action('customize_register', 'cjl_financial_customize_register');
 function cjl_get_image_url($filename) {
     return get_template_directory_uri() . '/assets/img/' . $filename;
 }
+
+
+function custom_about_us_customize_register($wp_customize) {
+
+    // Section
+    $wp_customize->add_section('about_us_section', array(
+        'title' => __('About Us Section', 'your-textdomain'),
+        'priority' => 30,
+    ));
+
+    // Image
+    $wp_customize->add_setting('about_us_image', array(
+        'default' => get_template_directory_uri() . '/assets/images/about_us_img.png',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'about_us_image_control', array(
+        'label' => __('About Us Image', 'your-textdomain'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_image',
+    )));
+
+    // About Us Heading
+    $wp_customize->add_setting('about_us_heading', array(
+        'default' => 'Institutional Discipline. Fintech Precision.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('about_us_heading_control', array(
+        'label' => __('About Us Heading', 'cjl-financial'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_heading',
+        'type' => 'text',
+    ));
+
+    // About Us Content
+    $wp_customize->add_setting('about_us_content', array(
+        'default' => 'We are a next-generation fund services firm operating at the intersection of institutional governance and advanced financial technology. Our integrated operating model brings together accounting rigor, regulatory intelligence, and investor transparency—engineered for performance-driven fund managers and global asset platforms.',
+        'sanitize_callback' => 'wp_kses_post',
+    ));
+
+    $wp_customize->add_control('about_us_content_control', array(
+        'label' => __('About Us Content', 'cjl-financial'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_content',
+        'type' => 'textarea',
+    ));
+
+    // Mission Heading & Content (shown first)
+    $wp_customize->add_setting('about_us_mission_heading', array(
+        'default' => 'Our Mission',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('about_us_mission_heading_control', array(
+        'label' => __('Mission Heading', 'cjl-financial'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_mission_heading',
+        'type' => 'text',
+    ));
+
+    $wp_customize->add_setting('about_us_mission_content', array(
+        'default' => 'To deliver institutionally governed, technology-enabled fund services that combine precision, regulatory confidence, and transparency—empowering fund managers and global asset platforms to operate with clarity, control, and scale.',
+        'sanitize_callback' => 'wp_kses_post',
+    ));
+    $wp_customize->add_control('about_us_mission_content_control', array(
+        'label' => __('Mission Content', 'cjl-financial'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_mission_content',
+        'type' => 'textarea',
+    ));
+
+    // Vision Heading & Content
+    $wp_customize->add_setting('about_us_vision_heading', array(
+        'default' => 'Vision',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('about_us_vision_heading_control', array(
+        'label' => __('Vision Heading', 'cjl-financial'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_vision_heading',
+        'type' => 'text',
+    ));
+
+    $wp_customize->add_setting('about_us_vision_content', array(
+        'default' => 'To be a globally trusted fund services partner—setting the benchmark for institutional excellence through fintech innovation, disciplined governance, and data-driven intelligence.',
+        'sanitize_callback' => 'wp_kses_post',
+    ));
+    $wp_customize->add_control('about_us_vision_content_control', array(
+        'label' => __('Vision Content', 'cjl-financial'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_vision_content',
+        'type' => 'textarea',
+    ));
+
+}
+add_action('customize_register', 'custom_about_us_customize_register');
+
+
+
+function cjl_customize_why_choose_section($wp_customize) {
+
+    // Section
+    $wp_customize->add_section('why_choose_section', array(
+        'title'       => __('Why Choose Us Section', 'cjl'),
+        'priority'    => 30,
+        'description' => __('Customize the Why Choose Us section content.', 'cjl'),
+    ));
+
+    // Section Title
+    $wp_customize->add_setting('why_choose_title', array(
+        'default'           => 'Why Global Managers Choose Us',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_title', array(
+        'label'    => __('Section Title', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    // Section Description
+    $wp_customize->add_setting('why_choose_desc', array(
+        'default'           => 'We combine discretion, rigor, and technology to deliver scalable infrastructure built for long-term performance.',
+        'sanitize_callback' => 'sanitize_textarea_field',
+    ));
+    $wp_customize->add_control('why_choose_desc', array(
+        'label'    => __('Section Description', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'textarea',
+    ));
+
+    // Left Column Cards
+    $wp_customize->add_setting('why_choose_card_1_number', array(
+        'default'           => '1.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_1_number', array(
+        'label'    => __('Left Card 1 Number', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_1_title', array(
+        'default'           => 'Institutional governance frameworks',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_1_title', array(
+        'label'    => __('Left Card 1 Title', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_2_number', array(
+        'default'           => '2.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_2_number', array(
+        'label'    => __('Left Card 2 Number', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_2_title', array(
+        'default'           => 'Fintech-enabled operational precision',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_2_title', array(
+        'label'    => __('Left Card 2 Title', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    // Right Column Cards
+    $wp_customize->add_setting('why_choose_card_3_number', array(
+        'default'           => '3.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_3_number', array(
+        'label'    => __('Right Card 1 Number', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_3_title', array(
+        'default'           => 'Cross-jurisdictional expertise',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_3_title', array(
+        'label'    => __('Right Card 1 Title', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_4_number', array(
+        'default'           => '4.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_4_number', array(
+        'label'    => __('Right Card 2 Number', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_4_title', array(
+        'default'           => 'Advanced data security protocols',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_4_title', array(
+        'label'    => __('Right Card 2 Title', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+}
+add_action('customize_register', 'cjl_customize_why_choose_section');
+

@@ -1,19 +1,31 @@
+    </main>
+
+    <?php // The service detail design (Figma 3515:469) has no newsletter above the footer. ?>
+    <?php if (!is_page_template('template-service-detail.php')) : ?>
     <!-- Newsletter Section -->
     <section class="newsletter-section">
         <div class="container custom_container">
             <div class="row align-items-center">
                 <div class="col-lg-6 m-auto text-center">
                     <form id="newsletterForm" class="input-group">
-                        <input type="email" name="email" class="bg-transparent border-0 form-control" placeholder="Enter your email address" required>
+                        <label for="newsletter-email" class="visually-hidden"><?php esc_html_e('Email address', 'cjl-financial'); ?></label>
+                        <input type="email" id="newsletter-email" name="email" class="bg-transparent border-0 form-control" placeholder="Enter your email address" autocomplete="email" required>
                         <button class="btn btn-danger rounded-0 fw-light" type="submit">Subscribe</button>
                     </form>
-                    <p class="mb-0 mt-3" style="font-size: 24px;">Enter your email to get newsletter.</p>
+                    <p class="mb-0 mt-3 newsletter-note">Enter your email to get newsletter.</p>
                 </div>
             </div>
         </div>
     </section>
+    <?php endif; ?>
 
     <!-- Footer -->
+    <?php
+    $cjl_services_page = get_page_by_path('fund-accounting-nav-calculation');
+    $cjl_about_page    = get_page_by_path('about-us');
+    $cjl_services_url  = $cjl_services_page ? get_permalink($cjl_services_page) : home_url('/#services');
+    $cjl_about_url     = $cjl_about_page ? get_permalink($cjl_about_page) : home_url('/#about');
+    ?>
     <footer style="background-image:url(<?php echo esc_url(cjl_get_image_url('home_banner_top_color_gradient.png')); ?>);background-position: top; background-repeat: no-repeat;">
         <div class="container custom_container">
             <div class="row">
@@ -38,9 +50,9 @@
                     } else {
                         ?>
                         <ul class="list-unstyled">
-                            <li class="mb-2"><a href="#services" class="text-white text-decoration-none">Services</a></li>
-                            <li class="mb-2"><a href="#investors" class="text-white text-decoration-none">Investors</a></li>
-                            <li class="mb-2"><a href="#media" class="text-white text-decoration-none">Media</a></li>
+                            <li class="mb-2"><a href="<?php echo esc_url($cjl_services_url); ?>" class="text-white text-decoration-none">Services</a></li>
+                            <li class="mb-2"><a href="<?php echo esc_url(home_url('/#investors')); ?>" class="text-white text-decoration-none">Investors</a></li>
+                            <li class="mb-2"><a href="<?php echo esc_url(home_url('/#media')); ?>" class="text-white text-decoration-none">Media</a></li>
                         </ul>
                         <?php
                     }
@@ -53,9 +65,9 @@
                     } else {
                         ?>
                         <ul class="list-unstyled">
-                            <li class="mb-2"><a href="#about" class="text-white text-decoration-none">About Us</a></li>
-                            <li class="mb-2"><a href="#faq" class="text-white text-decoration-none">FAQ</a></li>
-                            <li class="mb-2"><a href="#contact" class="text-white text-decoration-none">Contact Us</a></li>
+                            <li class="mb-2"><a href="<?php echo esc_url($cjl_about_url); ?>" class="text-white text-decoration-none">About Us</a></li>
+                            <li class="mb-2"><a href="<?php echo esc_url(home_url('/#faq')); ?>" class="text-white text-decoration-none">FAQ</a></li>
+                            <li class="mb-2"><a href="<?php echo esc_url(home_url('/#contact')); ?>" class="text-white text-decoration-none">Contact Us</a></li>
                         </ul>
                         <?php
                     }
@@ -76,8 +88,23 @@
                     }
                     ?>
                 </div>
-                <div class="col-sm-6 col-md-4 col-lg-3">
-                    <h6 class="text-uppercase">Follow Us</h6>
+                <div class="col-sm-6 col-md-4 col-lg-2">
+                    <?php
+                    if (is_active_sidebar('footer-4')) {
+                        dynamic_sidebar('footer-4');
+                    } else {
+                        ?>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#" class="text-white text-decoration-none">Help Center</a></li>
+                            <li class="mb-2"><a href="#" class="text-white text-decoration-none">Open Positions</a></li>
+                            <li class="mb-2"><a href="#" class="text-white text-decoration-none">Sitemap</a></li>
+                        </ul>
+                        <?php
+                    }
+                    ?>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-2">
+                    <h6 class="text-uppercase">Follow Us On</h6>
                     <div class="social-links">
                         <?php
                             $facebook = get_theme_mod('cjl_facebook', '')? get_theme_mod('cjl_facebook', ''):"#";
@@ -85,13 +112,13 @@
                             $twitter = get_theme_mod('cjl_twitter', '') ? get_theme_mod('cjl_twitter', ''):"#";
                             
                             if ($facebook) {
-                                echo '<a href="' . esc_url($facebook) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer"><img src="' . esc_url(cjl_get_image_url('fb.png')) . '" alt="facebook"></a>';
+                                echo '<a href="' . esc_url($facebook) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer" aria-label="' . esc_attr__('Facebook', 'cjl-financial') . '"><img src="' . esc_url(cjl_get_image_url('fb.png')) . '" alt="" loading="lazy" decoding="async"></a>';
                             }
                             if ($linkedin) {
-                                echo '<a href="' . esc_url($linkedin) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer"><img src="' . esc_url(cjl_get_image_url('in.png')) . '" alt="linkedin"></a>';
+                                echo '<a href="' . esc_url($linkedin) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer" aria-label="' . esc_attr__('LinkedIn', 'cjl-financial') . '"><img src="' . esc_url(cjl_get_image_url('in.png')) . '" alt="" loading="lazy" decoding="async"></a>';
                             }
                             if ($twitter) {
-                                echo '<a href="' . esc_url($twitter) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer"><img src="' . esc_url(cjl_get_image_url('x.png')) . '" alt="x"></a>';
+                                echo '<a href="' . esc_url($twitter) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer" aria-label="' . esc_attr__('X (Twitter)', 'cjl-financial') . '"><img src="' . esc_url(cjl_get_image_url('x.png')) . '" alt="" loading="lazy" decoding="async"></a>';
                             }
                         ?>
                     </div>

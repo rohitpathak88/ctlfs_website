@@ -9,6 +9,8 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+    <a class="visually-hidden-focusable skip-link" href="#site-content"><?php esc_html_e('Skip to content', 'cjl-financial'); ?></a>
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
         <div class="container custom_container">
@@ -65,13 +67,13 @@
                 if (!has_nav_menu('primary')) { ?>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo esc_url(home_url('/')); ?>">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#about">About Us</a>
+                            <a class="nav-link<?php echo is_front_page() ? ' active' : ''; ?>" href="<?php echo esc_url(home_url('/')); ?>">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#services">Services</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#about">About Us</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#investors">Investors</a>
@@ -80,10 +82,12 @@
                             <a class="nav-link" href="#media">Media</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#contact">Contact</a>
+                            <a class="nav-link" href="#contact">Contact Us</a>
                         </li>
                     </ul>
                 <?php } ?>
             </div>
         </div>
     </nav>
+
+    <main id="site-content">

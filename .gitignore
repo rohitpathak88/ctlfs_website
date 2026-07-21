@@ -12,7 +12,9 @@
 /wp-content/themes/index.php
 /wp-includes/
 /index.php
-/license.txt
+/debug.log
+/docs/
+/qa-screenshots/*
 /readme.html
 /wp-*.php
 /xmlrpc.php

@@ -1,0 +1,296 @@
+/*
+Theme Name: CTL Financial Child
+Description: Home-page implementation child theme for CTL Financial.
+Template: cjl-financial
+Version: 1.0.0
+Text Domain: cjl-financial-child
+*/
+
+/*
+ * Home-only overrides.
+ * Values are extracted from Figma Home frame 2859:157 and preserve the
+ * parent theme's shared token palette.
+ */
+
+body.home {
+	background: #000;
+}
+
+body.home .navbar {
+	padding: 32px 0 !important;
+}
+
+body.home .navbar-brand img,
+body.home .custom-logo-link img {
+	height: 88px;
+	max-width: 130px;
+	object-fit: contain;
+	width: 130px;
+}
+
+body.home .nav-link {
+	font-size: 14px;
+	font-weight: 400;
+	margin: 0 14px;
+}
+
+body.home .ctl-home-hero {
+	background-image: url("../cjl-financial/assets/img/home_banner_bottom_color_gradient.png");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	min-height: 802px;
+	overflow: hidden;
+	padding: 200px 0 90px;
+	position: relative;
+}
+
+body.home .ctl-home-hero h1 {
+	font-size: clamp(44px, 4.5vw, 72px);
+	line-height: 1.12;
+	max-width: 700px;
+}
+
+body.home .ctl-home-hero .lead {
+	max-width: 670px;
+}
+
+body.home .ctl-home-hero__left-shape,
+body.home .ctl-home-hero__right-shape {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+	inset: auto;
+	pointer-events: none;
+	position: absolute;
+	z-index: 0;
+}
+
+body.home .ctl-home-hero__left-shape {
+	background-image: url("../cjl-financial/assets/img/home_banner_left_corner.png");
+	height: 670px;
+	left: -50px;
+	top: 120px;
+	width: 706px;
+}
+
+body.home .ctl-home-hero__right-shape {
+	background-image: url("../cjl-financial/assets/img/home_banner_right_corner.png");
+	bottom: 0;
+	height: 404px;
+	right: 0;
+	width: 675px;
+}
+
+body.home .ctl-home-hero .container,
+body.home .ctl-home-hero .hero-image {
+	position: relative;
+	z-index: 1;
+}
+
+body.home .ctl-home-hero .hero-image {
+	right: auto;
+}
+
+body.home .ctl-home-hero .banner-men-image {
+	max-height: 684px;
+	object-fit: contain;
+}
+
+body.home .ctl-marquee .marquee-track {
+	animation-duration: 32s;
+}
+
+body.home .ctl-marquee .marquee-group {
+	gap: 2.5rem;
+	padding-right: 2.5rem;
+}
+
+body.home .ctl-marquee .item {
+	align-items: center;
+	display: flex;
+	font-size: 14px;
+}
+
+body.home .ctl-marquee .item img {
+	height: 19px;
+	margin-right: 12px;
+	width: 19px;
+}
+
+body.home .ctl-services-section {
+	background-image: url("../cjl-financial/assets/img/home_banner_bottom_color_gradient.png");
+	background-position: bottom;
+	background-repeat: no-repeat;
+}
+
+body.home .service-card {
+	opacity: 1;
+	transform: none;
+}
+
+body.home .service-card .card-body {
+	padding-bottom: 2rem;
+}
+
+body.home .service-card .card-body a {
+	font-size: 14px;
+	font-weight: 500;
+}
+
+body.home .ctl-about-us {
+	scroll-margin-top: 110px;
+}
+
+body.home .ctl-about-us .about-content .about-block + .about-block {
+	margin-top: 64px;
+}
+
+body.home .ctl-about-us .about-content .about-block h3 {
+	font-size: 28px;
+	line-height: 1.2;
+}
+
+body.home .ctl-differentiators {
+	background-image: url("../cjl-financial/assets/img/home_banner_bottom_color_gradient.png");
+	background-position: bottom;
+	background-repeat: no-repeat;
+}
+
+body.home .ctl-differentiators__center {
+	padding: 0 1rem;
+}
+
+body.home .ctl-differentiators__center h2 {
+	margin: 1.5rem auto 1rem;
+}
+
+body.home .ctl-alliances-section {
+	background-image: url("../cjl-financial/assets/img/our_trusted_alliances_bg.png");
+	background-position: bottom;
+	background-repeat: no-repeat;
+}
+
+body.home .ctl-worldwide-trust {
+	background-image: url("../cjl-financial/assets/img/home_banner_top_color_gradient.png"), url("../cjl-financial/assets/img/home_banner_bottom_color_gradient.png");
+	background-position: top center, bottom center;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+}
+
+body.home .faq-section {
+	padding: 130px 0;
+}
+
+body.home .faq-section .accordion-item {
+	opacity: 1;
+	transform: none;
+}
+
+body.home .faq-number {
+	min-width: 48px;
+}
+
+body.home .faq-section .accordion-button {
+	padding-left: 0;
+}
+
+body.home .ctl-contact-section .ctl-contact-section__panel {
+	background-color: #1a1a1a;
+	background-image: url("../cjl-financial/assets/img/let_connect.png");
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+
+body.home .ctl-contact-form__trap {
+	height: 0;
+	left: -9999px;
+	overflow: hidden;
+	position: absolute;
+	width: 0;
+}
+
+body.home .ctl-contact-form__status {
+	font-size: 16px;
+	min-height: 26px;
+}
+
+body.home .ctl-contact-form__status.is-success {
+	color: #c6f6d5;
+}
+
+body.home .ctl-contact-form__status.is-error {
+	color: #ffb4a2;
+}
+
+body.home .ctl-contact-form button:disabled {
+	cursor: wait;
+	opacity: 0.7;
+}
+
+body.home .ctl-contact-section .contact-info a {
+	color: #fff;
+	text-decoration-color: #ff704c;
+	text-underline-offset: 4px;
+}
+
+@media (max-width: 991.98px) {
+	body.home .ctl-home-hero {
+		min-height: 0;
+		padding-top: 150px;
+	}
+
+	body.home .ctl-home-hero__left-shape,
+	body.home .ctl-home-hero__right-shape {
+		opacity: 0.45;
+	}
+
+	body.home .ctl-home-hero .hero-image {
+		margin: 2rem auto 0;
+	}
+
+	body.home .ctl-home-hero .banner-men-image {
+		max-height: 500px;
+	}
+}
+
+@media (max-width: 767.98px) {
+	body.home .navbar {
+		padding: 16px 0 !important;
+	}
+
+	body.home .navbar-brand img,
+	body.home .custom-logo-link img {
+		height: 52px;
+		width: 78px;
+	}
+
+	body.home .ctl-home-hero {
+		padding: 130px 0 60px;
+	}
+
+	body.home .ctl-home-hero h1 {
+		font-size: 42px;
+	}
+
+	body.home .ctl-home-hero__left-shape,
+	body.home .ctl-home-hero__right-shape {
+		display: none;
+	}
+
+	body.home .hero-actions {
+		gap: 1rem !important;
+	}
+
+	body.home .services-section,
+	body.home .why-choose-section,
+	body.home .alliances-section,
+	body.home .worldwide-trust-section,
+	body.home .faq-section {
+		padding: 72px 0;
+	}
+
+	body.home .ctl-about-us .about-content .about-block + .about-block {
+		margin-top: 40px;
+	}
+}

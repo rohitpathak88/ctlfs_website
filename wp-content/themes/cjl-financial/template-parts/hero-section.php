@@ -13,27 +13,38 @@
         <div class="row align-items-center">
             <div class="col-lg-7 order-1 order-lg-0">
                 <?php
-                $hero_title = get_theme_mod('cjl_hero_title', 'Innovative & Intelligent <br> Financial Solutions');
-                $hero_description = get_theme_mod('cjl_hero_description', 'At CJL Client Success, Asset And Capital Focused Precision Delivering Superior Client Experiences In Accelerating Business Growth Through Research-Led Holistic Financial Capabilities.');
-                $hero_button_text = get_theme_mod('cjl_hero_button_text', 'EXPLORE MORE');
-                $hero_button_link = get_theme_mod('cjl_hero_button_link', '#services');
+                $hero_eyebrow = get_theme_mod('cjl_hero_eyebrow', 'Discover. Develop. Deliver.');
+                $hero_title = get_theme_mod('cjl_hero_title', 'Elevating Global Fund Administration');
+                $hero_description = get_theme_mod('cjl_hero_description', 'A technology-enabled, institutionally governed platform delivering precision fund accounting, investor servicing, regulatory assurance, and strategic structuring across global markets.');
+                $hero_button_text = get_theme_mod('cjl_hero_button_text', 'Request a Private Consultation');
+                $hero_button_link = get_theme_mod('cjl_hero_button_link', '#contact');
+                $hero_button2_text = get_theme_mod('cjl_hero_button2_text', 'Explore Our Capabilities');
+                $hero_button2_link = get_theme_mod('cjl_hero_button2_link', '#services');
                 ?>
+                <?php if ($hero_eyebrow) : ?>
+                    <p class="hero-eyebrow text-uppercase mb-3"><?php echo esc_html($hero_eyebrow); ?></p>
+                <?php endif; ?>
                 <h1 class="accent-gradient display-4 fw-light mb-3">
                     <?php echo wp_kses_post($hero_title); ?>
                 </h1>
                 <p class="lead mb-4">
                     <?php echo esc_html($hero_description); ?>
                 </p>
-                <a href="<?php echo esc_url($hero_button_link); ?>" class="btn-explore mt-4"><?php echo esc_html($hero_button_text); ?></a>
+                <div class="hero-actions d-flex flex-wrap gap-4 mt-4">
+                    <a href="<?php echo esc_url($hero_button_link); ?>" class="btn-explore"><?php echo esc_html($hero_button_text); ?></a>
+                    <?php if ($hero_button2_text) : ?>
+                        <a href="<?php echo esc_url($hero_button2_link); ?>" class="btn-explore btn-explore-secondary"><?php echo esc_html($hero_button2_text); ?></a>
+                    <?php endif; ?>
+                </div>
             </div>
             <div class="col-lg-5">
                 <div class="hero-image text-center">
                     <?php
                     $hero_image = get_theme_mod('cjl_hero_image', '');
                     if ($hero_image) {
-                        echo '<img src="' . esc_url($hero_image) . '" alt="Financial Expert" class="img-fluid banner-men-image">';
+                        echo '<img src="' . esc_url($hero_image) . '" alt="' . esc_attr__('Financial expert', 'cjl-financial') . '" class="img-fluid banner-men-image" fetchpriority="high" decoding="async">';
                     } else {
-                        echo '<img src="' . esc_url(cjl_get_image_url('banner_men.png')) . '" alt="Financial Expert" class="img-fluid banner-men-image">';
+                        echo '<img src="' . esc_url(cjl_get_image_url('banner_men.png')) . '" alt="' . esc_attr__('Financial expert', 'cjl-financial') . '" class="img-fluid banner-men-image" fetchpriority="high" decoding="async">';
                     }
                     ?>
                 </div>
