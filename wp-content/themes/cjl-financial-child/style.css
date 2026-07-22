@@ -387,13 +387,184 @@ body .navbar .nav-item.dropdown .nav-link.dropdown-toggle::after {
 
 /* Teams page */
 .ctl-teams-page .ctl-teams-hero .subtitle {
-	max-width: 760px;
+	color: #d5d5d5;
+	font-size: 18px;
+	line-height: 28px;
+	margin-bottom: 18px;
+	max-width: 1196px;
 }
 
 .ctl-teams-experts {
-	padding: 100px 0;
+	background: #000;
+	padding: 80px 0 100px;
 }
 
+.ctl-teams-experts__intro {
+	margin-bottom: 54px;
+}
+
+.ctl-teams-experts__title {
+	font-size: 34px;
+	line-height: 48px;
+	margin: 0 0 8px;
+	max-width: 787px;
+	text-transform: capitalize;
+}
+
+.ctl-teams-experts__subtitle {
+	color: #d5d5d5;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 28px;
+	max-width: 824px;
+}
+
+.ctl-teams-experts__grid {
+	display: grid;
+	gap: 20px;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ctl-expert-card {
+	max-width: 300px;
+	width: 100%;
+}
+
+.ctl-expert-card__media {
+	aspect-ratio: 300 / 406;
+	margin: 0;
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+}
+
+.ctl-expert-card__image {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	object-position: center top;
+	width: 100%;
+}
+
+.ctl-expert-card__badge {
+	background: #fff;
+	bottom: 15px;
+	box-sizing: border-box;
+	left: 15px;
+	min-height: 84px;
+	padding: 20px 21px 14px;
+	position: absolute;
+	right: 15px;
+	width: auto;
+}
+
+.ctl-expert-card__name {
+	color: #000;
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: 0;
+	line-height: 22px;
+	margin: 0;
+	text-transform: capitalize;
+}
+
+.ctl-expert-card__role {
+	color: #000;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: 0;
+	line-height: 22px;
+	margin: 0;
+	text-transform: capitalize;
+}
+
+.ctl-expert-card__rule {
+	background: #000;
+	display: block;
+	height: 1px;
+	margin-top: 7px;
+	width: 28px;
+}
+
+.ctl-expert-card__meta {
+	color: #fff;
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+	font-weight: 400;
+	gap: 0;
+	line-height: 22px;
+	margin-top: 19px;
+}
+
+.ctl-expert-card__meta a,
+.ctl-expert-card__meta span {
+	color: #fff;
+	text-decoration: none;
+}
+
+.ctl-expert-card__meta a:hover,
+.ctl-expert-card__meta a:focus-visible {
+	color: #ff704c;
+}
+
+.ctl-expert-card__linkedin {
+	align-items: center;
+	color: #ff704c !important;
+	display: inline-flex;
+	font-size: 13px;
+	font-weight: 500;
+	gap: 6px;
+	margin-top: 8px;
+}
+
+.ctl-expert-card__linkedin img {
+	display: block;
+	height: 12px;
+	width: 12px;
+}
+
+@media (max-width: 1199.98px) {
+	.ctl-teams-experts__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		justify-items: center;
+	}
+
+	.ctl-expert-card {
+		max-width: 360px;
+	}
+}
+
+@media (max-width: 767.98px) {
+	.ctl-teams-experts {
+		padding: 60px 0 80px;
+	}
+
+	.ctl-teams-experts__intro {
+		margin-bottom: 36px;
+	}
+
+	.ctl-teams-experts__title {
+		font-size: 28px;
+		line-height: 38px;
+	}
+
+	.ctl-teams-experts__subtitle {
+		font-size: 16px;
+		line-height: 26px;
+	}
+
+	.ctl-teams-experts__grid {
+		grid-template-columns: 1fr;
+		justify-items: center;
+	}
+
+	.ctl-expert-card {
+		max-width: 300px;
+	}
+}
+
+/* Legacy team card styles kept for any residual references */
 .ctl-team-card {
 	background: #1a1a1a;
 	border: 1px solid rgba(255, 112, 76, 0.28);
@@ -402,55 +573,20 @@ body .navbar .nav-item.dropdown .nav-link.dropdown-toggle::after {
 	padding: 32px 28px;
 }
 
-.ctl-team-card__avatar {
-	align-items: center;
-	background: rgba(146, 57, 35, 0.35);
-	border-radius: 50%;
-	color: #ff704c;
-	display: flex;
-	font-size: 28px;
-	font-weight: 600;
-	height: 72px;
-	justify-content: center;
-	margin-bottom: 20px;
-	width: 72px;
-}
-
-.ctl-team-card__name {
-	color: #fff;
-	font-size: 24px;
-	font-weight: 500;
-	margin-bottom: 6px;
-}
-
-.ctl-team-card__role {
-	color: #ff704c;
-	font-size: 16px;
-}
-
-.ctl-team-card__meta li {
-	color: #d5d5d5;
-	font-size: 15px;
-	line-height: 1.6;
-	margin-bottom: 4px;
-}
-
-.ctl-team-card__meta a {
-	color: #d5d5d5;
-	text-decoration: none;
-}
-
-.ctl-team-card__meta a:hover,
-.ctl-team-card__meta a:focus-visible {
-	color: #ff704c;
-}
-
 .ctl-teams-impact {
 	padding: 80px 0 110px;
 }
 
+.ctl-impact-stat {
+	background: #1a1a1a;
+	border-radius: 15px;
+	height: 100%;
+	min-height: 160px;
+	padding: 36px 18px 28px;
+}
+
 .ctl-impact-stat__value {
-	font-size: clamp(34px, 4vw, 48px);
+	font-size: clamp(34px, 4vw, 44px);
 	font-weight: 500;
 	line-height: 1.2;
 	margin-bottom: 10px;
