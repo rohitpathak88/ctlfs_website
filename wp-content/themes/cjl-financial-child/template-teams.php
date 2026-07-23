@@ -60,9 +60,12 @@ $linkedin_icon  = get_stylesheet_directory_uri() . '/assets/img/linkedin-icon.sv
 			<div class="ctl-teams-experts__grid">
 				<?php foreach ( $experts as $expert ) : ?>
 					<?php
-					$image_file = ! empty( $expert['image'] ) ? $expert['image'] : '';
-					$image_url  = $image_file ? get_stylesheet_directory_uri() . '/assets/img/team/' . $image_file : '';
-					$phone_href = ! empty( $expert['phone'] ) ? preg_replace( '/[^0-9+]/', '', $expert['phone'] ) : '';
+					$image_file   = ! empty( $expert['image'] ) ? $expert['image'] : '';
+					$image_url    = $image_file ? get_stylesheet_directory_uri() . '/assets/img/team/' . $image_file : '';
+					$phone_href   = ! empty( $expert['phone'] ) ? preg_replace( '/[^0-9+]/', '', $expert['phone'] ) : '';
+					$link_name    = ! empty( $expert['link_name'] ) && ! empty( $expert['linkedin'] );
+					$show_linkedin_icon = ! empty( $expert['linkedin'] ) && ! $link_name;
+					$has_meta     = ! empty( $expert['email'] ) || ! empty( $expert['phone'] ) || ! empty( $expert['address'] ) || $show_linkedin_icon;
 					?>
 					<article class="ctl-expert-card">
 						<div class="ctl-expert-card__media">
@@ -78,36 +81,49 @@ $linkedin_icon  = get_stylesheet_directory_uri() . '/assets/img/linkedin-icon.sv
 								>
 							<?php endif; ?>
 							<div class="ctl-expert-card__badge">
-								<h3 class="ctl-expert-card__name"><?php echo esc_html( $expert['name'] ); ?></h3>
+								<h3 class="ctl-expert-card__name">
+									<?php if ( $link_name ) : ?>
+										<a
+											class="ctl-expert-card__name-link"
+											href="<?php echo esc_url( $expert['linkedin'] ); ?>"
+											target="_blank"
+											rel="noopener noreferrer"
+										><?php echo esc_html( $expert['name'] ); ?></a>
+									<?php else : ?>
+										<?php echo esc_html( $expert['name'] ); ?>
+									<?php endif; ?>
+								</h3>
 								<p class="ctl-expert-card__role"><?php echo esc_html( $expert['role'] ); ?></p>
 								<?php if ( ! empty( $expert['show_rule'] ) ) : ?>
 									<span class="ctl-expert-card__rule" aria-hidden="true"></span>
 								<?php endif; ?>
 							</div>
 						</div>
-						<div class="ctl-expert-card__meta">
-							<?php if ( ! empty( $expert['email'] ) ) : ?>
-								<a href="mailto:<?php echo esc_attr( $expert['email'] ); ?>"><?php echo esc_html( $expert['email'] ); ?></a>
-							<?php endif; ?>
-							<?php if ( ! empty( $expert['phone'] ) ) : ?>
-								<a href="tel:<?php echo esc_attr( $phone_href ); ?>"><?php echo esc_html( $expert['phone'] ); ?></a>
-							<?php endif; ?>
-							<?php if ( ! empty( $expert['address'] ) ) : ?>
-								<span><?php echo esc_html( $expert['address'] ); ?></span>
-							<?php endif; ?>
-							<?php if ( ! empty( $expert['linkedin'] ) ) : ?>
-								<a
-									class="ctl-expert-card__linkedin"
-									href="<?php echo esc_url( $expert['linkedin'] ); ?>"
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label="<?php echo esc_attr( sprintf( __( 'View %s on LinkedIn', 'cjl-financial-child' ), $expert['name'] ) ); ?>"
-								>
-									<img src="<?php echo esc_url( $linkedin_icon ); ?>" alt="" width="12" height="12" loading="lazy" decoding="async">
-									<span><?php esc_html_e( 'LinkedIn', 'cjl-financial-child' ); ?></span>
-								</a>
-							<?php endif; ?>
-						</div>
+						<?php if ( $has_meta ) : ?>
+							<div class="ctl-expert-card__meta">
+								<?php if ( ! empty( $expert['email'] ) ) : ?>
+									<a href="mailto:<?php echo esc_attr( $expert['email'] ); ?>"><?php echo esc_html( $expert['email'] ); ?></a>
+								<?php endif; ?>
+								<?php if ( ! empty( $expert['phone'] ) ) : ?>
+									<a href="tel:<?php echo esc_attr( $phone_href ); ?>"><?php echo esc_html( $expert['phone'] ); ?></a>
+								<?php endif; ?>
+								<?php if ( ! empty( $expert['address'] ) ) : ?>
+									<span><?php echo esc_html( $expert['address'] ); ?></span>
+								<?php endif; ?>
+								<?php if ( $show_linkedin_icon ) : ?>
+									<a
+										class="ctl-expert-card__linkedin"
+										href="<?php echo esc_url( $expert['linkedin'] ); ?>"
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="<?php echo esc_attr( sprintf( __( 'View %s on LinkedIn', 'cjl-financial-child' ), $expert['name'] ) ); ?>"
+									>
+										<img src="<?php echo esc_url( $linkedin_icon ); ?>" alt="" width="12" height="12" loading="lazy" decoding="async">
+										<span><?php esc_html_e( 'LinkedIn', 'cjl-financial-child' ); ?></span>
+									</a>
+								<?php endif; ?>
+							</div>
+						<?php endif; ?>
 					</article>
 				<?php endforeach; ?>
 			</div>
