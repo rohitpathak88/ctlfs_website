@@ -46,10 +46,10 @@ $news_items = array(
                             <?php
                             $news_1_image = !empty($news_items[0]['image']) ? $news_items[0]['image'] : cjl_get_image_url('news1.png');
                             ?>
-                            <img src="<?php echo esc_url($news_1_image); ?>" alt="<?php echo esc_attr($news_items[0]['title']); ?>" class="img-fluid rounded-5 w-100" loading="lazy" decoding="async">
+                            <img src="<?php echo esc_url($news_1_image); ?>" alt="<?php echo esc_attr($news_items[0]['title']); ?>" class="img-fluid rounded-5 w-100">
                         </div>
                         <div class="d-block mt-4">
-                            <small class="news-badge d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1">
+                            <small class="d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1" style="color:#B8B8B8;background-color: #39241E;border-end-end-radius: 50px; border-start-end-radius: 50px;">
                                 Published: <?php echo esc_html($news_items[0]['date']); ?>
                             </small>
                             <a href="<?php echo esc_url($news_items[0]['link']); ?>" class="text-decoration-none text-white">
@@ -71,12 +71,12 @@ $news_items = array(
                                             <?php
                                             $news_2_image = !empty($news_items[1]['image']) ? $news_items[1]['image'] : cjl_get_image_url('news2.png');
                                             ?>
-                                            <img src="<?php echo esc_url($news_2_image); ?>" alt="<?php echo esc_attr($news_items[1]['title']); ?>" class="img-fluid rounded-5 w-100" loading="lazy" decoding="async">
+                                            <img src="<?php echo esc_url($news_2_image); ?>" alt="<?php echo esc_attr($news_items[1]['title']); ?>" class="img-fluid rounded-5 w-100">
                                         </div>
                                     </div>
                                     <div class="col-md-7">
                                         <div class="d-block mt-md-0 mt-4">
-                                            <small class="news-badge d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1">
+                                            <small class="d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1" style="color:#B8B8B8;background-color: #39241E;border-end-end-radius: 50px; border-start-end-radius: 50px;">
                                                 Published: <?php echo esc_html($news_items[1]['date']); ?>
                                             </small>
                                             <a href="<?php echo esc_url($news_items[1]['link']); ?>" class="text-decoration-none text-white">
@@ -97,12 +97,12 @@ $news_items = array(
                                             <?php
                                             $news_3_image = !empty($news_items[2]['image']) ? $news_items[2]['image'] : cjl_get_image_url('news3.png');
                                             ?>
-                                            <img src="<?php echo esc_url($news_3_image); ?>" alt="<?php echo esc_attr($news_items[2]['title']); ?>" class="img-fluid rounded-5 w-100" loading="lazy" decoding="async">
+                                            <img src="<?php echo esc_url($news_3_image); ?>" alt="<?php echo esc_attr($news_items[2]['title']); ?>" class="img-fluid rounded-5 w-100">
                                         </div>
                                     </div>
                                     <div class="col-md-7">
                                         <div class="d-block mt-md-0 mt-4">
-                                            <small class="news-badge d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1">
+                                            <small class="d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1" style="color:#B8B8B8;background-color: #39241E;border-end-end-radius: 50px; border-start-end-radius: 50px;">
                                                 Published: <?php echo esc_html($news_items[2]['date']); ?>
                                             </small>
                                             <a href="<?php echo esc_url($news_items[2]['link']); ?>" class="text-decoration-none text-white">
@@ -121,10 +121,10 @@ $news_items = array(
                 <div class="col-lg-7 col-md-12">
                     <div class="h-100">
                         <div class="news-image position-relative">
-                            <img src="<?php echo esc_url(cjl_get_image_url('news1.png')); ?>" alt="News 1" class="img-fluid rounded-5 w-100" loading="lazy" decoding="async">
+                            <img src="<?php echo esc_url(cjl_get_image_url('news1.png')); ?>" alt="News 1" class="img-fluid rounded-5 w-100">
                         </div>
                         <div class="d-block mt-4">
-                            <small class="news-badge d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1">Published: Oct 23 2025</small>
+                            <small class="d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1" style="color:#B8B8B8;background-color: #39241E;border-end-end-radius: 50px; border-start-end-radius: 50px;">Published: Oct 23 2025</small>
                             <a href="#" class="text-decoration-none text-white">
                                 <h5 class="sub-title">The Ultimate Guide To Staging Your Home For A Quick Sale</h5>
                             </a>
@@ -138,12 +138,12 @@ $news_items = array(
                             <div class="row align-items-center">
                                 <div class="col-md-5">
                                     <div class="news-image position-relative">
-                                        <img src="<?php echo esc_url(cjl_get_image_url('news2.png')); ?>" alt="News 2" class="img-fluid rounded-5 w-100" loading="lazy" decoding="async">
+                                        <img src="<?php echo esc_url(cjl_get_image_url('news2.png')); ?>" alt="News 2" class="img-fluid rounded-5 w-100">
                                     </div>
                                 </div>
                                 <div class="col-md-7">
                                     <div class="d-block mt-md-0 mt-4">
-                                        <small class="news-badge d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1">Published: Oct 23 2025</small>
+                                        <small class="d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1" style="color:#B8B8B8;background-color: #39241E;border-end-end-radius: 50px; border-start-end-radius: 50px;">Published: Oct 23 2025</small>
                                         <a href="#" class="text-decoration-none text-white">
                                             <h5 class="sub-title">The Ultimate Guide To Staging Your Home For A Quick Sale</h5>
                                         </a>
@@ -156,12 +156,12 @@ $news_items = array(
                             <div class="row align-items-center">
                                 <div class="col-md-5">
                                     <div class="news-image position-relative">
-                                        <img src="<?php echo esc_url(cjl_get_image_url('news3.png')); ?>" alt="News 3" class="img-fluid rounded-5 w-100" loading="lazy" decoding="async">
+                                        <img src="<?php echo esc_url(cjl_get_image_url('news3.png')); ?>" alt="News 3" class="img-fluid rounded-5 w-100">
                                     </div>
                                 </div>
                                 <div class="col-md-7">
                                     <div class="d-block mt-md-0 mt-4">
-                                        <small class="news-badge d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1">Published: Oct 23 2025</small>
+                                        <small class="d-inline-block mb-3 pb-1 pe-3 ps-3 pt-1" style="color:#B8B8B8;background-color: #39241E;border-end-end-radius: 50px; border-start-end-radius: 50px;">Published: Oct 23 2025</small>
                                         <a href="#" class="text-decoration-none text-white">
                                             <h5 class="sub-title">The ultimate guide to staging your home for a quick sale</h5>
                                         </a>

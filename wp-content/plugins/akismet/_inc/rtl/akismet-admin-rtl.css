@@ -1,4 +1,4 @@
-/* This file was automatically generated on Apr 09 2026 23:28:55 */
+/* This file was automatically generated on Oct 23 2025 00:26:05 */
 
 body {
 	--akismet-color-charcoal: #272635;
@@ -19,19 +19,21 @@ body {
 	--akismet-color-notice-light-red: #ffdbde;
 	--akismet-color-notice-dark-red: #ff6676;
 	--akismet-color-notice-yellow: #e5c133;
-	--akismet-color-page-bg: #fcfcfc;
-	--akismet-color-border: #e0e0e0;
-	--akismet-color-border-light: #f0f0f0;
-	--akismet-color-near-black: #1e1e1e;
-	--akismet-color-text-grey: #757575;
-	--akismet-color-icon: #666666;
-	--akismet-color-icon-hover: #333333;
 }
 
 /* UI components */
+.akismet-new-feature {
+	background-color: var(--akismet-color-mid-green);
+	border-radius: 4px;
+	color: var(--akismet-color-white);
+	font-size: 10px;
+	padding: 4px 6px;
+	text-transform: uppercase;
+	vertical-align: top;
+}
+
 #akismet-plugin-container {
-	background-color: var(--akismet-color-page-bg);
-	border: 1px solid var(--akismet-color-border);
+	background-color: var(--akismet-color-light-grey);
 	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen-Sans', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
 	-webkit-font-smoothing: antialiased;
 }
@@ -46,19 +48,14 @@ body {
 }
 
 #akismet-plugin-container button:focus-visible,
-#akismet-plugin-container input:focus-visible {
+#akismet-plugin-container input:focus-visible,
+#akismet-plugin-container a:focus-visible {
 	border: 0;
 	box-shadow: none;
 	outline: 2px solid var(--akismet-color-light-blue);
 }
 
-#akismet-plugin-container a:focus-visible {
-	box-shadow: none;
-	outline: 2px solid var(--akismet-color-light-blue);
-}
-
 .akismet-masthead {
-	border-bottom: 1px solid var(--akismet-color-border-light);
 	box-shadow: none;
 }
 
@@ -91,16 +88,12 @@ body {
 	background-color: var(--akismet-color-dark-green);
 }
 
-.akismet-external-link {
-	display: inline-block;
-}
-
 .akismet-external-link::after {
 	content: "↗";
 	display: inline-block;
 	padding-right: 2px;
 	text-decoration: none;
-	vertical-align: middle;
+	vertical-align: text-top;
 }
 
 /* Need this specificity to override the existing header rule */
@@ -155,8 +148,8 @@ body {
 }
 
 .akismet-new-snapshot__item {
-	border-top: 1px solid var(--akismet-color-border-light);
-	border-right: 1px solid var(--akismet-color-border-light);
+	border-top: 1px solid var(--akismet-color-light-grey);
+	border-right: 1px solid var(--akismet-color-light-grey);
 	padding: 1em;
 }
 
@@ -180,31 +173,6 @@ body {
 	padding: 1em;
 }
 
-.akismet-stats-footer {
-	align-items: center;
-	border-radius: 0 0 7px 7px;
-	border-top: 1px solid var(--akismet-color-border-light);
-	display: flex;
-	justify-content: space-between;
-	outline-offset: -2px;
-	padding: 1em 1.5em;
-	text-decoration: none;
-}
-
-.akismet-stats-footer:hover {
-	text-decoration: underline;
-}
-
-.akismet-stats-footer:focus {
-	border-radius: 0 0 7px 7px;
-	box-shadow: none;
-}
-
-.akismet-stats-footer:focus-visible {
-	box-shadow: none;
-	outline: 2px solid var(--akismet-color-light-blue);
-}
-
 .akismet-box {
 	border: 0;
 }
@@ -215,13 +183,13 @@ body {
 
 .akismet-box,
 .akismet-card {
-	border: 1px solid var(--akismet-color-border);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 0 2px rgba(0, 0, 0, 0.16);
 	border-radius: 8px;
 	overflow: hidden;
 }
 
 .akismet-card {
-	margin: 16px auto 0 auto;
+	margin: 32px auto 0 auto;
 }
 
 .akismet-lower {
@@ -237,7 +205,7 @@ body {
 }
 
 .akismet-settings__row {
-	border-bottom: 1px solid var(--akismet-color-border-light);
+	border-bottom: 1px solid var(--akismet-color-light-grey);
 	display: block;
 	padding: 1em 1.5em;
 }
@@ -265,8 +233,7 @@ body {
 
 .akismet-card-actions__secondary-action {
 	align-self: center;
-	margin-inline-end: auto;
-	margin-inline-start: 6px;
+	margin-left: auto;
 }
 
 .akismet-settings__row label {
@@ -276,10 +243,6 @@ body {
 .akismet-settings__row-note {
 	font-size: 0.9em;
 	margin-top: 0.4em;
-}
-
-.akismet-settings__row-note abbr {
-	cursor: help;
 }
 
 .akismet-settings__row input[type="checkbox"],
@@ -327,22 +290,15 @@ body {
 }
 
 .akismet-account {
-	display: grid;
-	grid-template-columns: auto 1fr;
-	margin-inline-start: 2px;
-	margin-top: 0.25em;
 	padding-bottom: 0;
-	row-gap: 0.25em;
 }
 
-.akismet-account__label {
+.akismet-account th {
 	font-weight: 500;
-	padding-bottom: 1em;
-	padding-inline-end: 1em;
+	padding-left: 1em;
 }
 
-.akismet-account__value {
-	margin: 0;
+.akismet-account th, .akismet-account td {
 	padding-bottom: 1em;
 }
 
@@ -540,33 +496,6 @@ p.akismet-setup__connection-action-description {
 	margin: 1rem 0 0;
 }
 
-/* API key field with copy button */
-.akismet-api-key-wrapper {
-	position: relative;
-	display: inline-flex;
-	align-items: center;
-}
-
-.akismet-api-key-wrapper input {
-	padding-left: 36px;
-}
-
-.akismet-api-key-copy {
-	position: absolute;
-	left: 4px;
-	background: none;
-	border: none;
-	cursor: pointer;
-	padding: 4px;
-	color: var(--akismet-color-icon);
-	display: flex;
-	align-items: center;
-}
-
-.akismet-api-key-copy:hover {
-	color: var(--akismet-color-icon-hover);
-}
-
 /* Setup - API key input */
 .akismet-enter-api-key-box {
 	margin: 1.5rem 0;
@@ -666,42 +595,32 @@ h3.akismet-enter-api-key-box__header {
 
 .akismet-compatible-plugins__list {
 	display: grid;
-	grid-template-columns: 1fr;
-	gap: 10px;
+	grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+	gap: 20px;
 	margin: 1.5em 0 1em 0;
 	padding: 0;
 }
 
 .akismet-compatible-plugins__card {
-	border: 1px solid var(--akismet-color-border-light);
+	border: 1px solid var(--akismet-color-light-grey);
 	border-radius: 4px;
+	flex: 1 1 calc(50% - 5px);
 	padding: 1em;
 	display: flex;
-	align-items: center;
 }
 
 .akismet-compatible-plugins__card-logo {
 	padding: 0 0 0 1.5em;
 	object-fit: contain;
-	width: 36px;
-	height: 36px;
-}
-
-.akismet-compatible-plugins__card-detail {
-	display: flex;
-	flex: 1;
-	justify-content: space-between;
-	align-items: center;
 }
 
 .akismet-compatible-plugins__card-title {
 	font-size: 1.2em;
 	margin-top: 0;
-	margin-bottom: 0;
 }
 
 .akismet-compatible-plugins__docs {
-	margin-top: 0;
+	margin-top: 1em;
 }
 
 .akismet-compatible-plugins__show-more {
@@ -785,7 +704,7 @@ h3.akismet-enter-api-key-box__header {
 /* Gutenberg small breakpoint */
 @media screen and (max-width: 600px) {
 	.akismet-compatible-plugins__list {
-		gap: 8px;
+		gap: 10px;
 	}
 
 	.akismet-activate__button,

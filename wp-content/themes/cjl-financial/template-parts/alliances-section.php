@@ -90,7 +90,7 @@ $alliances = array_slice($alliances, 0, 5);
                                 ?>">
                                     <img class="img-fluid"
                                         src="<?php echo esc_url($alliances[$i]['image']); ?>"
-                                        alt="<?php echo esc_attr($alliances[$i]['alt']); ?>" loading="lazy" decoding="async">
+                                        alt="<?php echo esc_attr($alliances[$i]['alt']); ?>">
                                 </div>
                             </div>
                         <?php endfor; ?>
@@ -103,7 +103,7 @@ $alliances = array_slice($alliances, 0, 5);
                         <div class="alliance-logo p-4 position-relative alliance-logo-top-<?php echo esc_attr($alliances[2]['position']); ?>">
                             <img class="img-fluid"
                                 src="<?php echo esc_url($alliances[2]['image']); ?>"
-                                alt="<?php echo esc_attr($alliances[2]['alt']); ?>" loading="lazy" decoding="async">
+                                alt="<?php echo esc_attr($alliances[2]['alt']); ?>">
                         </div>
                     </div>
                 <?php endif; ?>
@@ -120,7 +120,7 @@ $alliances = array_slice($alliances, 0, 5);
                                 ?>">
                                     <img class="img-fluid"
                                         src="<?php echo esc_url($alliances[$i]['image']); ?>"
-                                        alt="<?php echo esc_attr($alliances[$i]['alt']); ?>" loading="lazy" decoding="async">
+                                        alt="<?php echo esc_attr($alliances[$i]['alt']); ?>">
                                 </div>
                             </div>
                         <?php endfor; ?>

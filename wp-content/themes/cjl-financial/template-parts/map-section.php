@@ -12,16 +12,14 @@
     <div class="container custom_container">
         <div class="row">
             <div class="col-md-6 m-auto text-center">
-                <h2 class="text-center back_white_text_gradient title fw-light mb-2"><?php echo esc_html(get_theme_mod('cjl_map_title', 'Worldwide Trust')); ?></h2>
-                <?php $map_desc = get_theme_mod('cjl_map_desc', ''); ?>
-                <?php if ($map_desc) : ?>
-                    <p class="lead mb-5"><?php echo esc_html($map_desc); ?></p>
-                <?php endif; ?>
+                <h2 class="text-center back_white_text_gradient title fw-light mb-2">Worldwide Trust</h2>
+                <p class="lead mb-5"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, um dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur... </p>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12 text-center">
-                <img src="<?php echo esc_url(cjl_get_image_url('map.png')); ?>" alt="<?php esc_attr_e('World map highlighting the regions we serve', 'cjl-financial'); ?>" class="img-fluid" loading="lazy" decoding="async">
+                 <div id="map" style="width: 100%; height: 600px;"></div>
+                    <!-- <img src="<?php echo esc_url(cjl_get_image_url('map.png')); ?>" alt="" class="img-fluid"> -->
             </div>
         </div>
     </div>

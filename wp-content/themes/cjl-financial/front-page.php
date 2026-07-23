@@ -25,7 +25,7 @@ get_template_part('template-parts/why-choose-us-section');
 get_template_part('template-parts/alliances-section');
 
 // News Section
-get_template_part('template-parts/news-section');
+// get_template_part('template-parts/news-section');
 
 // Map Section
 get_template_part('template-parts/map-section');

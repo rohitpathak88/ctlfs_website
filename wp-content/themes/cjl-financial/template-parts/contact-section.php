@@ -25,20 +25,20 @@ $contact_description = get_theme_mod('cjl_contact_description', 'Lorem ipsum dol
                 <div class="col-lg-6 mb-4 mb-lg-0">
                     <form id="contactForm">
                         <div class="mb-4">
-                            <label for="contact-name" class="mb-1 fw-medium">Your Name:</label>
-                            <input type="text" id="contact-name" name="name" class="form-control bg-secondary border-0 text-white" autocomplete="name" required>
+                            <label class="mb-1 fw-medium">Your Name:</label>
+                            <input type="text" name="name" class="form-control bg-secondary border-0 text-white" required>
                         </div>
                         <div class="mb-4">
-                            <label for="contact-email" class="mb-1 fw-medium">Email Address:</label>
-                            <input type="email" id="contact-email" name="email" class="form-control bg-secondary border-0 text-white" autocomplete="email" required>
+                            <label class="mb-1 fw-medium">Email Address:</label>
+                            <input type="email" name="email" class="form-control bg-secondary border-0 text-white" required>
                         </div>
                         <div class="mb-4">
-                            <label for="contact-company" class="mb-1 fw-medium">Company Name:</label>
-                            <input type="text" id="contact-company" name="company" class="form-control bg-secondary border-0 text-white" autocomplete="organization" required>
+                            <label class="mb-1 fw-medium">Company Name:</label>
+                            <input type="text" name="company" class="form-control bg-secondary border-0 text-white" required>
                         </div>
                         <div class="mb-4">
-                            <label for="contact-message" class="mb-1 fw-medium">Message:</label>
-                            <textarea id="contact-message" name="message" class="form-control bg-secondary border-0 text-white" rows="4" required></textarea>
+                            <label class="mb-1 fw-medium">Message:</label>
+                            <textarea name="message" class="form-control bg-secondary border-0 text-white" rows="4" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-danger btn-lg rounded-0">Submit</button>
                     </form>

@@ -1,71 +1,3 @@
-/* Phones and small tablets (below md) */
-@media (max-width: 767.98px) {
-    .hero-section h1 {
-        font-size: 2.4rem;
-    }
-
-    .worldwide-trust-section .title,
-    .about-us .title,
-    .reach_out .title,
-    .faq-section .title,
-    .news-section .title,
-    .alliances-section .title,
-    .services-section .service-card .card-body .title {
-        font-size: 32px;
-    }
-
-    .about-us .about-content .about-block:not(:last-child) {
-        margin-bottom: 32px;
-    }
-
-    .service-detail-hero {
-        padding: 140px 0 40px;
-    }
-
-    .service-detail-hero h1 {
-        font-size: 2.4rem;
-        line-height: 1.3;
-    }
-
-    .service-detail-hero .subtitle {
-        font-size: 18px;
-        line-height: 30px;
-    }
-
-    .service-intro-band .title,
-    .service-approach .title,
-    .core-expertise .title,
-    .why-matters .title,
-    .cta-band .title {
-        font-size: 28px;
-        line-height: 38px;
-    }
-
-    .expertise-card {
-        padding: 32px 26px;
-    }
-
-    .benefit-pill {
-        font-size: 18px;
-        line-height: 26px;
-        padding: 14px 26px;
-    }
-
-    .insights-featured {
-        padding: 140px 0 30px;
-    }
-
-    .insights-featured .featured-card {
-        padding: 40px 22px 50px;
-    }
-
-    .insights-featured .title,
-    .insight-card .title {
-        font-size: 26px;
-        line-height: 36px;
-    }
-}
-
 /* Extra small (phones) */
 @media (max-width: 575.98px) {
     .contact-section .big_heading{
@@ -144,7 +76,7 @@
         width: 20px;
     }
 
-    .services-section .service-card .card-body .title {
+    .services-section .service-card .card-body h5.title {
         font-size:33px;
     }
     .services-section .service-card .card-body .lead{
@@ -205,8 +137,8 @@
         width: 30px;
     }
 
-    .services-section .service-card .card-body .title {
-        font-size:34px;
+    .services-section .service-card .card-body h5.title {
+        font-size:35px;
     }
     .services-section .service-card .card-body .lead{
         font-size: 1.1rem;
@@ -219,10 +151,6 @@
 
 /* Extra extra large (big screens) */
 @media (min-width: 1400px) {
-    /* Matches the Figma content width (~1300px on the 1440px design frame). */
-    .custom_container.container{
-        max-width: 1300px;
-    }
      .hero-image {
         position: absolute;
         right: 200px; 

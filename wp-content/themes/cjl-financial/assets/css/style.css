@@ -17,17 +17,6 @@ html {
     scroll-behavior: smooth;
 }
 
-.skip-link {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    z-index: 2000;
-    padding: 10px 18px;
-    background-color: var(--accent-color);
-    color: #ffffff;
-    text-decoration: none;
-}
-
 body {
     font-family:
         "Inter",
@@ -69,8 +58,6 @@ p {
 }
 
 /* ====== text Gradient  =========== */
-/* Hero-style gradient spans the whole heading block (per Figma: first line
-   white, last line accent), so no per-line tiling here. */
 .accent-gradient {
     background: linear-gradient(to top, #e66e50, #ffffff);
     -webkit-background-clip: text;
@@ -79,8 +66,6 @@ p {
     color: transparent;
 }
 
-/* Two-tone headings per Figma: the gradient spans the whole text block, so
-   the first line renders white and following lines fade to grey. */
 .back_white_text_gradient {
     background: linear-gradient(to top, #616161, #ffffff);
     -webkit-background-clip: text;
@@ -130,13 +115,6 @@ p {
     color: var(--accent-color) !important;
 }
 
-.nav-link:focus-visible,
-a:focus-visible,
-button:focus-visible {
-    outline: 2px solid var(--accent-color);
-    outline-offset: 2px;
-}
-
 .nav-link.active {
     color: var(--accent-color) !important;
 }
@@ -166,17 +144,10 @@ button:focus-visible {
     mix-blend-mode: lighten;
 }
 
-.hero-eyebrow {
-    color: var(--accent-color);
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 4px;
-}
-
 .btn-explore {
     position: relative;
     display: inline-block;
-    padding: 14px 28px;
+    padding: 14px 42px;
     color: var(--accent-color);
     font-size: 14px;
     letter-spacing: 2px;
@@ -185,7 +156,6 @@ button:focus-visible {
     background: transparent;
     border: 1px solid var(--accent-color);
     cursor: pointer;
-    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .btn-explore::before {
@@ -198,26 +168,6 @@ button:focus-visible {
 
     border: 1px solid var(--accent-color);
     pointer-events: none;
-}
-
-.btn-explore:hover,
-.btn-explore:focus-visible {
-    color: #ffffff;
-    background-color: var(--accent-color);
-}
-
-.btn-explore:focus-visible {
-    outline: 2px solid #ffffff;
-    outline-offset: 2px;
-}
-
-.btn-explore-secondary {
-    color: var(--dark-text-color);
-    border-color: var(--border-color);
-}
-
-.btn-explore-secondary::before {
-    border-color: var(--border-color);
 }
 
 /* Buttons */
@@ -241,49 +191,39 @@ button:focus-visible {
 
 /* Services Section */
 .services-section {
-    padding: 150px 0px 100px;
+    padding: 120px 0px 100px;
 }
 
-/* Decorative "SERVICES" labels around the card grid.
-   Anchored to the grid wrapper (not a card) and kept within the container
-   gutter so they are never clipped by the viewport edge. */
-.services-grid .corner-label {
+.service-card .right_corner_text,
+.service-card .bottom_corner_text,
+.service-card .left_corner_text,
+.service-card .top_corner_text{
     color: #FFFFFFB2;
     position: absolute;
     font-weight: 500;
     font-size: 14px;
-    letter-spacing: 4px;
-    line-height: 1;
-    pointer-events: none;
+    letter-spacing:4px;
 }
 
-.services-grid .top_corner_text {
+.service-card .top_corner_text{
     top: -25px;
-    left: 12px;
 }
 
-.services-grid .left_corner_text {
-    writing-mode: vertical-rl;
-    left: -10px;
-    top: 12px;
+.service-card .left_corner_text{
+    transform: rotate(90deg);
+    left: -62px;
+    top: 35px;
 }
 
-.services-grid .bottom_corner_text {
+.service-card .bottom_corner_text{
     bottom: -25px;
-    right: 12px;
+    right: 0;
 }
 
-.services-grid .right_corner_text {
-    writing-mode: vertical-rl;
-    right: -10px;
-    bottom: 12px;
-}
-
-@media (max-width: 767.98px) {
-    .services-grid .left_corner_text,
-    .services-grid .right_corner_text {
-        display: none;
-    }
+.service-card .right_corner_text{
+   transform: rotate(90deg);
+    right: -62px;
+    bottom: 35px;
 }
 
 .services-section .service-card {
@@ -359,13 +299,6 @@ button:focus-visible {
     padding: 130px 0;
 }
 
-.news-section .news-badge {
-    color: #B8B8B8;
-    background-color: #39241E;
-    border-end-end-radius: 50px;
-    border-start-end-radius: 50px;
-}
-
 .news-image::after {
     content: "";
     background-color: #0000003b;
@@ -386,40 +319,12 @@ button:focus-visible {
     color: var(--accent-color) !important;
 }
 
-/* Round +/- toggle icons per Figma (plus when collapsed, minus when open). */
 .accordion-button::after {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background-color: #92392329;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23FF704C' stroke-linecap='round' stroke-width='2' d='M8 3v10M3 8h10'/%3e%3c/svg%3e");
-    background-position: center;
-    background-size: 14px;
-}
-
-.accordion-button:not(.collapsed)::after {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23FF704C' stroke-linecap='round' stroke-width='2' d='M3 8h10'/%3e%3c/svg%3e");
-    transform: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23DC4D47' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
 }
 
 .accordion-button {
     font-size: 20px;
-}
-
-.faq-section .faq-number {
-    font-size: 20px;
-    color: var(--accent-color);
-}
-
-/* Checker decoration beside the FAQ heading (per Figma). Brightened because
-   the shared checker asset is tuned for card backgrounds, not the page black. */
-.faq-section .faq-heading-wrap .faq-checker {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 150px;
-    height: auto;
-    filter: brightness(2.2);
 }
 
 /* Contact Section */
@@ -479,10 +384,6 @@ button:focus-visible {
     font-weight: lighter;
 }
 
-.newsletter-section .newsletter-note {
-    font-size: 24px;
-}
-
 /* Footer */
 footer {
     padding: 70px 0px 70px;
@@ -512,59 +413,41 @@ footer a:hover {
 
 /* marquee */
 .marquee{
-    background: linear-gradient(90deg, rgba(255, 112, 76, 0.05) 0%, rgba(255, 112, 76, 0.5) 51.92%, rgba(255, 112, 76, 0.05) 100%);
-    mask-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 0));
-    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 0));
-    max-width: 100%;
+    background: linear-gradient(90deg, rgba(255,112,76,0.05) 0%, rgba(255,112,76,0.5) 51.92%, rgba(255,112,76,0.05) 100%);
+    mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
     overflow: hidden;
-    position: relative;
     width: 100%;
     height: 60px;
     line-height: 60px;
+}
+
+.marquee ul{
+    display: flex;
+    gap: 50px;
     white-space: nowrap;
+    animation: scrollLeft 10s linear infinite;
 }
 
-/* The track holds two identical groups; sliding it by -50% loops seamlessly. */
-.marquee .marquee-track {
-    display: flex;
-    width: max-content;
-    animation: marquee-scroll calc(var(--marquee-items, 4) * 8s) linear infinite;
-    will-change: transform;
-}
-
-.marquee .marquee-group {
-    display: flex;
-    gap: 3rem;
-    margin: 0;
-    padding: 0 3rem 0 0;
-    flex-shrink: 0;
-}
-
-.marquee .item {
+.marquee .item{
     color: #FFFFFFB2;
 }
 
-.marquee:hover .marquee-track {
-    animation-play-state: paused;
-}
-
-@keyframes marquee-scroll {
-    to {
+@keyframes scrollLeft{
+    from{
+        transform: translateX(0);
+    }
+    to{
         transform: translateX(-50%);
     }
+
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .marquee .marquee-track {
-        animation: none;
-    }
-}
 
 /* About Us */
 .about-us .about-content{
     padding-left: 44px;
-    margin-top: 50px;
-    padding-top: 46px;
+    margin-top: 20px;
+    padding-top: 22px;
 }
 
 .about-us .about-content::before {
@@ -577,9 +460,15 @@ footer a:hover {
     background: #333;
 }
 
-/* Extra breathing room between the Mission and Vision blocks. */
-.about-us .about-content .about-block:not(:last-child) {
-    margin-bottom: 48px;
+.about-us .about-content .progress-line {
+    position: absolute;
+    left: 10px;
+    top: 50px;
+    width: 3px;
+    height: 29px;
+    background: #FF704C6B;
+    transition: height 0.1s linear;
+    border-radius: 5px;
 }
 
 .about-us .about-content .top-dot {
@@ -625,251 +514,86 @@ footer a:hover {
 }
 
 /* Worldwide Trust */
-.worldwide-trust-section {
+/* .worldwide-trust-section {
     padding: 100px 0px 100px 0px;
 }
+  */
 
-/* ====== Service Detail Page (per Figma 3515:469) ====== */
-.service-detail-hero {
-    padding: 200px 0 60px;
+
+.team-section{
+    padding: 88px 0px 100px;
 }
 
-.service-detail-hero h1 {
-    font-size: 54px;
-    line-height: 74px;
+.team-card .card-overlay{
+    width: 85%;
+    bottom: 20px;
 }
 
-.service-detail-hero .subtitle {
-    color: var(--dark-text-color);
-    font-size: 22px;
-    line-height: 38px;
+.counter-section .card{
+    background-color: #1a1a1a !important;
+    border-radius: 15px;
 }
 
-.service-intro-band {
-    background-color: #151515;
-    padding: 60px 0;
+.counter-section .card h2{
+   font-weight: 400;
+   font-size: 40px;
 }
 
-.service-intro-band .title,
-.service-approach .title,
-.core-expertise .title,
-.why-matters .title,
-.cta-band .title {
-    font-size: 34px;
-    line-height: 48px;
-}
-
-.service-approach {
-    padding: 50px 0 100px;
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-size: 100% auto;
-}
-
-.approach-icon {
-    align-items: center;
-    background-color: rgba(146, 57, 35, 0.16);
-    border-radius: 50%;
-    display: flex;
-    height: 78px;
-    justify-content: center;
-    width: 78px;
-}
-
-.approach-icon img {
-    width: 34px;
-    height: 34px;
-}
-
-.approach-title {
-    font-size: 22px;
-    line-height: 32px;
-    margin: 24px 0 16px;
-}
-
-.core-expertise {
-    background-color: #151515;
-    padding: 50px 0 100px;
-}
-
-.expertise-card {
-    background-color: #151515;
-    border: 1px solid rgba(255, 112, 76, 0.31);
-    border-radius: 25px;
-    height: 100%;
-    padding: 45px 42px;
-}
-
-.expertise-card .number {
-    font-size: 24px;
-    line-height: 34px;
-    margin-bottom: 12px;
-}
-
-.expertise-card .card-title {
-    font-size: 24px;
-    line-height: 34px;
-    margin-bottom: 16px;
-}
-
-.why-matters {
-    padding: 80px 0;
-}
-
-.benefit-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
-.benefit-pill {
-    background-color: #1a1a1a;
-    border-radius: 50px;
-    display: inline-block;
-    font-size: 24px;
-    line-height: 34px;
-    padding: 20px 40px;
-}
-
-.why-matters-note {
-    max-width: 840px;
-}
-
-/* Shared orange CTA band (service detail + insights pages) */
-.cta-band {
-    background: linear-gradient(90deg, rgba(255, 112, 76, 0.05) 0%, rgba(255, 112, 76, 0.5) 51.92%, rgba(255, 112, 76, 0.05) 100%);
-    padding: 72px 0;
+.counter-section .card p{
+    font-size: 18px;
 }
 
 .btn-explore-white {
-    color: #ffffff;
-    border-color: #ffffff;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
 }
 
 .btn-explore-white::before {
-    border-color: #ffffff;
+    border-color: #ffffff !important;
 }
 
-/* ====== About Us / Insights Page (per Figma 3572:7025) ====== */
-.insights-featured {
-    padding: 180px 0 40px;
-}
-
-.insights-featured .featured-card {
-    background-color: #2c130d;
-    border-radius: 15px;
-    padding: 60px 40px 70px;
-}
-
-.insights-featured .title {
-    font-size: 34px;
-    line-height: 44px;
-    max-width: 990px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.insights-featured .lead {
-    max-width: 1186px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.read-more {
-    color: var(--accent-color);
-    font-weight: 500;
-    text-decoration: none;
-    white-space: nowrap;
-}
-
-.read-more:hover {
-    color: #ffffff;
-}
-
-.author-chip {
-    align-items: center;
-    border-radius: 50px;
-    display: inline-flex;
-    font-size: 14px;
-    gap: 12px;
-    height: 44px;
-    line-height: 16px;
-    padding: 2px 26px 2px 2px;
-}
-
-.author-chip img {
-    border-radius: 50%;
-    height: 40px;
-    object-fit: cover;
-    width: 40px;
-}
-
-.author-chip-dark {
-    background-color: #4e2217;
-    border: 1px solid #5f2d21;
-    color: #ffffff;
-}
-
-.author-chip-light {
-    background-color: #ffffff;
-    border: 1px solid #5f2d21;
-    color: #000000;
-    bottom: 30px;
-    left: 50%;
-    position: absolute;
-    transform: translateX(-50%);
-    z-index: 2;
-}
-
-.insights-grid {
-    padding: 60px 0 110px;
-}
-
-.insights-row + .insights-row {
-    margin-top: 48px;
-}
-
-.insight-image {
-    border-radius: 15px;
-    overflow: hidden;
+.btn-explore {
     position: relative;
+    display: inline-block;
+    padding: 14px 28px;
+    color: var(--accent-color);
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    cursor: pointer;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
-.insight-image img:first-child {
-    display: block;
-    height: 300px;
-    object-fit: cover;
-    width: 100%;
-}
-
-.insight-image::after {
-    background: linear-gradient(to bottom, rgba(146, 63, 43, 0) 0%, rgba(44, 19, 13, 0.6) 100%);
-    bottom: 0;
+.btn-explore::before {
     content: "";
-    height: 168px;
-    left: 0;
     position: absolute;
-    width: 100%;
-    z-index: 1;
+    top: 6px;
+    left: 6px;
+    right: -6px;
+    bottom: -6px;
+    border: 1px solid var(--accent-color);
+    pointer-events: none;
 }
 
-.insight-card .title {
-    font-size: 34px;
-    line-height: 44px;
+.btn-explore:hover,
+.btn-explore:focus-visible {
+    color: #ffffff;
+    background-color: var(--accent-color);
 }
 
-.load-more-wrap {
-    gap: 2.5rem;
+.btn-explore:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
 }
 
-.load-more-line {
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.5));
-    flex: 1;
-    height: 1px;
+.btn-explore-secondary {
+    color: var(--dark-text-color);
+    border-color: var(--border-color);
 }
 
-.load-more-line-end {
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.5));
+.btn-explore-secondary::before {
+    border-color: var(--border-color);
 }
- 

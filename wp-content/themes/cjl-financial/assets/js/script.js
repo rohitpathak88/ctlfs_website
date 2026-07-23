@@ -53,5 +53,9 @@ document.addEventListener('DOMContentLoaded', function() {
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(el);
     });
+    
+    // auto duplicate marquee items
+    const marquee = document.querySelector('.marquee ul');
+    marquee.innerHTML += marquee.innerHTML;
 });
  
