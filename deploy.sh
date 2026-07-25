@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # deploy.sh — CTL Fund Services WordPress deploy for Ubuntu 24.04
-#             (Git deploy + Let's Encrypt SSL)
+#             (LEMP install + Git deploy + Let's Encrypt SSL)
 #
 # Deploys tracked theme/plugin code from Git while preserving:
 #   - wp-config.php
@@ -11,12 +11,13 @@
 #
 # Usage:
 #   chmod +x deploy.sh
-#   ./deploy.sh                 # pull current DEPLOY_BRANCH
-#   ./deploy.sh --branch main   # deploy a specific branch
-#   ./deploy.sh --setup         # first-time clone into DEPLOY_PATH
-#   ./deploy.sh --ssl           # issue/renew Let's Encrypt SSL + HTTPS
-#   ./deploy.sh --setup --ssl   # clone then enable SSL
-#   ./deploy.sh --status        # show git + SSL info
+#   sudo ./deploy.sh --install              # Nginx + MySQL + PHP 8.3
+#   sudo ./deploy.sh --setup                # git clone into DEPLOY_PATH
+#   sudo ./deploy.sh --ssl                  # Let's Encrypt HTTPS
+#   sudo ./deploy.sh --install --setup --ssl
+#   ./deploy.sh                             # git pull / hard reset
+#   ./deploy.sh --branch main
+#   ./deploy.sh --status
 #
 # Optional config file (same directory):
 #   cp deploy.env.example deploy.env  # then edit values
@@ -33,17 +34,27 @@ DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
 WEB_USER="${WEB_USER:-www-data}"
 WEB_GROUP="${WEB_GROUP:-www-data}"
 KEEP_RELEASES="${KEEP_RELEASES:-5}"
-USE_RELEASES="${USE_RELEASES:-0}" # 1 = atomic releases under releases/, 0 = deploy in place
-GIT_SSH_KEY="${GIT_SSH_KEY:-}"    # e.g. /home/deploy/.ssh/ctlfs_deploy
+USE_RELEASES="${USE_RELEASES:-0}"
+GIT_SSH_KEY="${GIT_SSH_KEY:-}"
 LOG_FILE="${LOG_FILE:-/var/log/ctlfs-deploy.log}"
 
 # SSL / HTTPS (Let's Encrypt)
-DOMAIN="${DOMAIN:-}"
-WWW_DOMAIN="${WWW_DOMAIN:-}"          # optional www alias, e.g. www.example.com
-SSL_EMAIL="${SSL_EMAIL:-}"
-WEB_SERVER="${WEB_SERVER:-nginx}"     # nginx | apache
+DOMAIN="${DOMAIN:-ctlfs.in}"
+WWW_DOMAIN="${WWW_DOMAIN:-www.ctlfs.in}"
+SSL_EMAIL="${SSL_EMAIL:-admin@ctlfs.in}"
+WEB_SERVER="${WEB_SERVER:-nginx}"
 SSL_FORCE_HTTPS="${SSL_FORCE_HTTPS:-1}"
-SSL_STAGING="${SSL_STAGING:-0}"       # 1 = Let's Encrypt staging (testing)
+SSL_STAGING="${SSL_STAGING:-0}"
+
+# LEMP / PHP / MySQL
+PHP_VERSION="${PHP_VERSION:-8.3}"
+MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
+DB_NAME="${DB_NAME:-ctlfs}"
+DB_USER="${DB_USER:-ctlfs}"
+DB_PASSWORD="${DB_PASSWORD:-}"
+DB_HOST="${DB_HOST:-localhost}"
+INSTALL_WP_CLI="${INSTALL_WP_CLI:-1}"
+TIMEZONE="${TIMEZONE:-UTC}"
 
 # Load optional local config
 if [[ -f "${SCRIPT_DIR}/deploy.env" ]]; then
@@ -74,13 +85,29 @@ need_cmd() {
 }
 
 need_root() {
-  [[ "$(id -u)" -eq 0 ]] || die "SSL / web-server changes require root (sudo ./deploy.sh --ssl)"
+  [[ "$(id -u)" -eq 0 ]] || die "This action requires root (sudo ./deploy.sh ...)"
 }
 
 git_ssh_env() {
   if [[ -n "$GIT_SSH_KEY" ]]; then
     [[ -f "$GIT_SSH_KEY" ]] || die "GIT_SSH_KEY not found: $GIT_SSH_KEY"
     export GIT_SSH_COMMAND="ssh -i ${GIT_SSH_KEY} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+  fi
+}
+
+php_fpm_socket() {
+  local sock="/run/php/php${PHP_VERSION}-fpm.sock"
+  if [[ -S "$sock" ]]; then
+    echo "$sock"
+    return
+  fi
+  # Fallback to any installed php-fpm socket
+  local found
+  found="$(ls /run/php/php*-fpm.sock 2>/dev/null | head -n1 || true)"
+  if [[ -n "$found" ]]; then
+    echo "$found"
+  else
+    echo "/run/php/php${PHP_VERSION}-fpm.sock"
   fi
 }
 
@@ -158,6 +185,208 @@ detect_web_server() {
   fi
 }
 
+rand_secret() {
+  if command -v openssl >/dev/null 2>&1; then
+    openssl rand -base64 24 | tr -d '/+=' | cut -c1-24
+  else
+    head -c 48 /dev/urandom | base64 | tr -d '/+=' | cut -c1-24
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# LEMP install — Nginx + MySQL + PHP 8.3 (Ubuntu 24.04)
+# ---------------------------------------------------------------------------
+install_lemp() {
+  need_root
+
+  log "Installing LEMP stack (Nginx, MySQL, PHP ${PHP_VERSION})..."
+
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update -y
+  apt-get install -y ca-certificates curl gnupg lsb-release software-properties-common apt-transport-https unzip git ufw openssl
+
+  # Nginx
+  log "Installing Nginx..."
+  apt-get install -y nginx
+  systemctl enable --now nginx
+
+  # MySQL Server
+  log "Installing MySQL Server..."
+  apt-get install -y mysql-server
+  systemctl enable --now mysql
+
+  if [[ -z "$MYSQL_ROOT_PASSWORD" ]]; then
+    MYSQL_ROOT_PASSWORD="$(rand_secret)"
+    log "Generated MYSQL_ROOT_PASSWORD (save this): ${MYSQL_ROOT_PASSWORD}"
+  fi
+  if [[ -z "$DB_PASSWORD" ]]; then
+    DB_PASSWORD="$(rand_secret)"
+    log "Generated DB_PASSWORD (save this): ${DB_PASSWORD}"
+  fi
+
+  # Secure-ish root auth + create WordPress DB/user
+  log "Configuring MySQL database ${DB_NAME} / user ${DB_USER}..."
+  mysql --protocol=socket -uroot <<SQL
+ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${MYSQL_ROOT_PASSWORD}';
+CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';
+CREATE USER IF NOT EXISTS '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASSWORD}';
+GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'localhost';
+GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'127.0.0.1';
+FLUSH PRIVILEGES;
+SQL
+
+  # Persist credentials helper (root-only)
+  umask 077
+  cat >/root/.ctlfs-db.env <<EOF
+MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+DB_NAME=${DB_NAME}
+DB_USER=${DB_USER}
+DB_PASSWORD=${DB_PASSWORD}
+DB_HOST=${DB_HOST}
+EOF
+  chmod 600 /root/.ctlfs-db.env
+  log "DB credentials saved to /root/.ctlfs-db.env"
+
+  # PHP 8.3 + WordPress extensions
+  log "Installing PHP ${PHP_VERSION} + extensions..."
+  apt-get install -y "php${PHP_VERSION}-fpm" "php${PHP_VERSION}-cli" "php${PHP_VERSION}-common" "php${PHP_VERSION}-mysql" "php${PHP_VERSION}-xml" "php${PHP_VERSION}-curl" "php${PHP_VERSION}-mbstring" "php${PHP_VERSION}-zip" "php${PHP_VERSION}-gd" "php${PHP_VERSION}-imagick" "php${PHP_VERSION}-intl" "php${PHP_VERSION}-bcmath" "php${PHP_VERSION}-soap" "php${PHP_VERSION}-opcache"
+
+  # PHP tweaks for WordPress
+  local php_ini="/etc/php/${PHP_VERSION}/fpm/php.ini"
+  if [[ -f "$php_ini" ]]; then
+    sed -i 's/^;*memory_limit = .*/memory_limit = 256M/' "$php_ini"
+    sed -i 's/^;*upload_max_filesize = .*/upload_max_filesize = 64M/' "$php_ini"
+    sed -i 's/^;*post_max_size = .*/post_max_size = 64M/' "$php_ini"
+    sed -i 's/^;*max_execution_time = .*/max_execution_time = 300/' "$php_ini"
+    sed -i "s|^;*date.timezone =.*|date.timezone = ${TIMEZONE}|" "$php_ini"
+  fi
+
+  systemctl enable --now "php${PHP_VERSION}-fpm"
+  systemctl restart "php${PHP_VERSION}-fpm"
+
+  # Docroot
+  mkdir -p "$DEPLOY_PATH"
+  chown -R "${WEB_USER}:${WEB_GROUP}" "$DEPLOY_PATH"
+
+  # Default Nginx site pointing at DEPLOY_PATH (HTTP; SSL adds HTTPS later)
+  local sock
+  sock="$(php_fpm_socket)"
+  local conf="/etc/nginx/sites-available/ctlfs.conf"
+  local server_names="_ ${DOMAIN:-localhost}"
+  if [[ -n "$DOMAIN" ]]; then
+    server_names="${DOMAIN}${WWW_DOMAIN:+ $WWW_DOMAIN}"
+  fi
+
+  log "Writing Nginx site config ${conf} (PHP-FPM: ${sock})"
+  cat >"$conf" <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name ${server_names};
+
+    root ${DEPLOY_PATH};
+    index index.php index.html;
+
+    client_max_body_size 64M;
+
+    location / {
+        try_files \$uri \$uri/ /index.php?\$args;
+    }
+
+    location ~ \.php\$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:${sock};
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~* /\.(?!well-known).* {
+        deny all;
+    }
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+}
+EOF
+
+  rm -f /etc/nginx/sites-enabled/default
+  ln -sfn "$conf" /etc/nginx/sites-enabled/ctlfs.conf
+  nginx -t
+  systemctl reload nginx
+
+  # Firewall
+  if command -v ufw >/dev/null 2>&1; then
+    ufw allow OpenSSH >/dev/null || true
+    ufw allow 'Nginx Full' >/dev/null || {
+      ufw allow 80/tcp >/dev/null || true
+      ufw allow 443/tcp >/dev/null || true
+    }
+    ufw --force enable >/dev/null 2>&1 || true
+    log "UFW enabled (OpenSSH + Nginx Full)"
+  fi
+
+  # WP-CLI
+  if [[ "$INSTALL_WP_CLI" == "1" ]] && ! command -v wp >/dev/null 2>&1; then
+    log "Installing WP-CLI..."
+    curl -fsSL -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    chmod +x /tmp/wp-cli.phar
+    mv /tmp/wp-cli.phar /usr/local/bin/wp
+  fi
+
+  # Optional wp-config stub if missing (user fills salts)
+  if [[ ! -f "${DEPLOY_PATH}/wp-config.php" ]] && [[ -f "${DEPLOY_PATH}/wp-config-sample.php" ]]; then
+    log "NOTE: Copy wp-config-sample.php → wp-config.php and set DB credentials:"
+    log "  DB_NAME=${DB_NAME} DB_USER=${DB_USER} DB_PASSWORD=(see /root/.ctlfs-db.env)"
+  elif [[ ! -f "${DEPLOY_PATH}/wp-config.php" ]]; then
+    log "Creating minimal wp-config.php placeholder (edit secrets before going live)"
+    cat >"${DEPLOY_PATH}/wp-config.php" <<EOF
+<?php
+define( 'DB_NAME', '${DB_NAME}' );
+define( 'DB_USER', '${DB_USER}' );
+define( 'DB_PASSWORD', '${DB_PASSWORD}' );
+define( 'DB_HOST', '${DB_HOST}' );
+define( 'DB_CHARSET', 'utf8mb4' );
+define( 'DB_COLLATE', '' );
+
+\$table_prefix = 'wp_';
+
+define( 'AUTH_KEY',         '$(rand_secret)$(rand_secret)' );
+define( 'SECURE_AUTH_KEY',  '$(rand_secret)$(rand_secret)' );
+define( 'LOGGED_IN_KEY',    '$(rand_secret)$(rand_secret)' );
+define( 'NONCE_KEY',        '$(rand_secret)$(rand_secret)' );
+define( 'AUTH_SALT',        '$(rand_secret)$(rand_secret)' );
+define( 'SECURE_AUTH_SALT', '$(rand_secret)$(rand_secret)' );
+define( 'LOGGED_IN_SALT',   '$(rand_secret)$(rand_secret)' );
+define( 'NONCE_SALT',       '$(rand_secret)$(rand_secret)' );
+
+define( 'WP_DEBUG', false );
+
+if ( ! defined( 'ABSPATH' ) ) {
+	define( 'ABSPATH', __DIR__ . '/' );
+}
+
+require_once ABSPATH . 'wp-settings.php';
+EOF
+    chown "${WEB_USER}:${WEB_GROUP}" "${DEPLOY_PATH}/wp-config.php"
+    chmod 640 "${DEPLOY_PATH}/wp-config.php"
+  fi
+
+  log "LEMP install complete."
+  log "  Nginx : $(nginx -v 2>&1)"
+  log "  MySQL : $(mysql --version 2>&1)"
+  log "  PHP   : $(php -v | head -n1)"
+  log "  FPM   : $(php_fpm_socket)"
+}
+
 # ---------------------------------------------------------------------------
 # SSL — Let's Encrypt (Certbot) on Ubuntu 24
 # ---------------------------------------------------------------------------
@@ -171,7 +400,7 @@ install_certbot() {
     return 0
   fi
 
-  log "Installing Certbot for ${server} (Ubuntu 24)..."
+  log "Installing Certbot for ${server}..."
   apt-get update -y
   if [[ "$server" == "apache" ]]; then
     apt-get install -y certbot python3-certbot-apache
@@ -182,10 +411,11 @@ install_certbot() {
 
 ensure_http_vhost() {
   need_root
-  local server domain docroot
+  local server domain docroot sock
   server="$(detect_web_server)"
   domain="$DOMAIN"
   docroot="$DEPLOY_PATH"
+  sock="$(php_fpm_socket)"
 
   [[ -n "$domain" ]] || die "DOMAIN is required for SSL (set in deploy.env)"
 
@@ -210,17 +440,18 @@ server {
 
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:${sock};
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        include fastcgi_params;
     }
 
-    location ~* /\. {
+    location ~* /\.(?!well-known).* {
         deny all;
     }
 }
 EOF
       ln -sfn "$conf" "/etc/nginx/sites-enabled/${domain}.conf"
-      # Prefer this site over default
-      rm -f /etc/nginx/sites-enabled/default 2>/dev/null || true
+      # Prefer domain vhost; keep ctlfs.conf if needed
       nginx -t
       systemctl reload nginx
     else
@@ -247,7 +478,7 @@ ${WWW_DOMAIN:+    ServerAlias ${WWW_DOMAIN}}
     CustomLog \${APACHE_LOG_DIR}/${domain}-access.log combined
 </VirtualHost>
 EOF
-      a2enmod rewrite headers ssl >/dev/null
+      a2enmod rewrite headers ssl proxy_fcgi setenvif >/dev/null
       a2ensite "${domain}.conf" >/dev/null
       a2dissite 000-default.conf >/dev/null 2>&1 || true
       apache2ctl configtest
@@ -268,7 +499,7 @@ issue_ssl_certificate() {
   server="$(detect_web_server)"
   domain="$DOMAIN"
 
-  [[ -n "$domain" ]] || die "DOMAIN is required (e.g. DOMAIN=example.com in deploy.env)"
+  [[ -n "$domain" ]] || die "DOMAIN is required (e.g. DOMAIN=ctlfs.in in deploy.env)"
   [[ -n "$SSL_EMAIL" ]] || die "SSL_EMAIL is required for Let's Encrypt registration"
 
   domain_args=(-d "$domain")
@@ -286,19 +517,9 @@ issue_ssl_certificate() {
   log "Requesting SSL certificate for ${domain}${WWW_DOMAIN:+ / $WWW_DOMAIN} via ${server}..."
 
   if [[ "$server" == "apache" ]]; then
-    certbot --apache \
-      "${domain_args[@]}" \
-      "${email_args[@]}" \
-      "${staging_args[@]}" \
-      --redirect \
-      --non-interactive
+    certbot --apache "${domain_args[@]}" "${email_args[@]}" "${staging_args[@]}" --redirect --non-interactive
   else
-    certbot --nginx \
-      "${domain_args[@]}" \
-      "${email_args[@]}" \
-      "${staging_args[@]}" \
-      --redirect \
-      --non-interactive
+    certbot --nginx "${domain_args[@]}" "${email_args[@]}" "${staging_args[@]}" --redirect --non-interactive
   fi
 
   log "Certificate issued/renewed."
@@ -309,12 +530,13 @@ force_wp_https() {
   [[ -n "$DOMAIN" ]] || return 0
 
   local https_url="https://${DOMAIN}"
-  if wp_cli option update home "$https_url" --quiet 2>/dev/null \
-    && wp_cli option update siteurl "$https_url" --quiet 2>/dev/null; then
-    log "WordPress home/siteurl set to ${https_url}"
-  else
-    log "NOTE: Could not update WP URLs via WP-CLI. Set home/siteurl to ${https_url} manually."
+  if wp_cli option update home "$https_url" --quiet 2>/dev/null; then
+    if wp_cli option update siteurl "$https_url" --quiet 2>/dev/null; then
+      log "WordPress home/siteurl set to ${https_url}"
+      return 0
+    fi
   fi
+  log "NOTE: Could not update WP URLs via WP-CLI. Set home/siteurl to ${https_url} manually."
 }
 
 enable_ssl_renewal() {
@@ -324,15 +546,9 @@ enable_ssl_renewal() {
     log "Certbot auto-renew timer enabled"
     systemctl status certbot.timer --no-pager -l | head -n 8 || true
   else
-    # Fallback cron hint
-    if [[ ! -f /etc/cron.d/certbot ]]; then
-      log "NOTE: Enable renewal with: systemctl enable --now certbot.timer"
-    else
-      log "Certbot cron already present"
-    fi
+    log "NOTE: Enable renewal with: systemctl enable --now certbot.timer"
   fi
 
-  # Dry-run renew to validate
   if certbot renew --dry-run >/dev/null 2>&1; then
     log "Certbot renew dry-run OK"
   else
@@ -341,9 +557,9 @@ enable_ssl_renewal() {
 }
 
 ssl_status() {
-  echo "DOMAIN      : ${DOMAIN:-"(not set)"}"
-  echo "WWW_DOMAIN  : ${WWW_DOMAIN:-"(not set)"}"
-  echo "SSL_EMAIL   : ${SSL_EMAIL:-"(not set)"}"
+  echo "DOMAIN      : ${DOMAIN:-(not set)}"
+  echo "WWW_DOMAIN  : ${WWW_DOMAIN:-(not set)}"
+  echo "SSL_EMAIL   : ${SSL_EMAIL:-(not set)}"
   echo "WEB_SERVER  : $(detect_web_server)"
   echo "FORCE_HTTPS : $SSL_FORCE_HTTPS"
 
@@ -365,11 +581,10 @@ setup_ssl() {
   [[ -n "$DOMAIN" ]] || die "Set DOMAIN in deploy.env before --ssl"
   [[ -n "$SSL_EMAIL" ]] || die "Set SSL_EMAIL in deploy.env before --ssl"
 
-  # DNS must already point here; open firewall ports
   if command -v ufw >/dev/null 2>&1 && ufw status 2>/dev/null | grep -q 'Status: active'; then
     log "Allowing OpenSSH, HTTP, HTTPS in UFW"
     ufw allow OpenSSH >/dev/null || true
-    ufw allow 'Nginx Full' >/dev/null 2>&1 || ufw allow 'Apache Full' >/dev/null 2>&1 || {
+    ufw allow 'Nginx Full' >/dev/null 2>&1 || {
       ufw allow 80/tcp >/dev/null || true
       ufw allow 443/tcp >/dev/null || true
     }
@@ -388,7 +603,16 @@ show_status() {
   echo "REPO_URL    : $REPO_URL"
   echo "BRANCH      : $DEPLOY_BRANCH"
   echo "WEB_USER    : $WEB_USER"
-  echo "USE_RELEASES: $USE_RELEASES"
+  echo "PHP_VERSION : $PHP_VERSION"
+  echo "DB_NAME     : $DB_NAME"
+  echo "--- stack ---"
+  command -v nginx >/dev/null && nginx -v 2>&1 || echo "nginx: not installed"
+  command -v mysql >/dev/null && mysql --version 2>&1 || echo "mysql: not installed"
+  command -v php >/dev/null && php -v | head -n1 || echo "php: not installed"
+  [[ -S "$(php_fpm_socket)" ]] && echo "php-fpm sock: $(php_fpm_socket)" || echo "php-fpm sock: missing"
+  systemctl is-active --quiet nginx 2>/dev/null && echo "nginx: active" || echo "nginx: inactive"
+  systemctl is-active --quiet mysql 2>/dev/null && echo "mysql: active" || echo "mysql: inactive"
+  systemctl is-active --quiet "php${PHP_VERSION}-fpm" 2>/dev/null && echo "php-fpm: active" || echo "php-fpm: inactive"
   if [[ -d "${DEPLOY_PATH}/.git" ]]; then
     echo "--- git ---"
     git -C "$DEPLOY_PATH" rev-parse --abbrev-ref HEAD 2>/dev/null || true
@@ -414,7 +638,20 @@ setup_repo() {
   fi
 
   if [[ -d "$DEPLOY_PATH" ]] && [[ -n "$(ls -A "$DEPLOY_PATH" 2>/dev/null || true)" ]]; then
-    die "${DEPLOY_PATH} exists and is not empty, and has no .git. Back up / empty it, or set DEPLOY_PATH."
+    # Allow non-empty docroot that only has LEMP placeholder files
+    if [[ ! -f "${DEPLOY_PATH}/index.php" ]] && [[ ! -d "${DEPLOY_PATH}/wp-content" ]]; then
+      die "${DEPLOY_PATH} exists and is not empty, and has no .git. Back up / empty it, or set DEPLOY_PATH."
+    fi
+    log "Docroot exists; initializing git in place..."
+    cd "$DEPLOY_PATH"
+    git init
+    git remote add origin "$REPO_URL" 2>/dev/null || git remote set-url origin "$REPO_URL"
+    git fetch --prune origin
+    git checkout -B "$DEPLOY_BRANCH" "origin/${DEPLOY_BRANCH}"
+    mkdir -p "${DEPLOY_PATH}/wp-content/uploads"
+    fix_permissions "$DEPLOY_PATH"
+    log "Setup (in-place) complete."
+    return 0
   fi
 
   log "Creating ${DEPLOY_PATH}"
@@ -469,7 +706,7 @@ deploy_inplace() {
 }
 
 # ---------------------------------------------------------------------------
-# Atomic releases (optional): releases/<timestamp> + current symlink
+# Atomic releases (optional)
 # ---------------------------------------------------------------------------
 deploy_releases() {
   need_cmd git
@@ -487,7 +724,7 @@ deploy_releases() {
   [[ -f "${shared_dir}/wp-config.php" ]] || log "NOTE: Place production wp-config.php at ${shared_dir}/wp-config.php"
 
   if [[ ! -d "${DEPLOY_PATH}/repo/.git" ]]; then
-    log "Cloning bare working copy into ${DEPLOY_PATH}/repo"
+    log "Cloning working copy into ${DEPLOY_PATH}/repo"
     mkdir -p "${DEPLOY_PATH}/repo"
     git clone --branch "$DEPLOY_BRANCH" "$REPO_URL" "${DEPLOY_PATH}/repo"
   fi
@@ -499,16 +736,8 @@ deploy_releases() {
 
   log "Creating release ${release_dir}"
   mkdir -p "$release_dir"
-  if command -v rsync >/dev/null 2>&1; then
-    rsync -a --delete \
-      --exclude='.git' \
-      --exclude='wp-config.php' \
-      --exclude='wp-content/uploads' \
-      --exclude='.htaccess' \
-      ./ "$release_dir/"
-  else
-    need_cmd rsync
-  fi
+  need_cmd rsync
+  rsync -a --delete --exclude='.git' --exclude='wp-config.php' --exclude='wp-content/uploads' --exclude='.htaccess' ./ "$release_dir/"
 
   ln -sfn "${shared_dir}/wp-content/uploads" "${release_dir}/wp-content/uploads"
   if [[ -f "${shared_dir}/wp-config.php" ]]; then
@@ -540,8 +769,16 @@ deploy_releases() {
 # ---------------------------------------------------------------------------
 ACTION="deploy"
 DO_SSL=0
+DO_INSTALL=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --install|--lemp)
+      DO_INSTALL=1
+      if [[ "$ACTION" == "deploy" ]]; then
+        ACTION="install"
+      fi
+      shift
+      ;;
     --setup)
       ACTION="setup"
       shift
@@ -567,7 +804,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     -h|--help)
-      sed -n '2,28p' "$0"
+      sed -n '2,30p' "$0"
       exit 0
       ;;
     *)
@@ -577,22 +814,34 @@ while [[ $# -gt 0 ]]; do
 done
 
 log "=== CTLFS deploy start (Ubuntu) ==="
-log "Action=${ACTION} Branch=${DEPLOY_BRANCH} Path=${DEPLOY_PATH} SSL=${DO_SSL}"
+log "Action=${ACTION} Branch=${DEPLOY_BRANCH} Path=${DEPLOY_PATH} Install=${DO_INSTALL} SSL=${DO_SSL}"
 
 case "$ACTION" in
+  install)
+    install_lemp
+    ;;
   setup)
+    if [[ "$DO_INSTALL" == "1" ]]; then
+      install_lemp
+    fi
     setup_repo
     if [[ "$DO_SSL" == "1" ]]; then
       setup_ssl
     fi
     ;;
   ssl)
+    if [[ "$DO_INSTALL" == "1" ]]; then
+      install_lemp
+    fi
     setup_ssl
     ;;
   status)
     show_status
     ;;
   deploy)
+    if [[ "$DO_INSTALL" == "1" ]]; then
+      install_lemp
+    fi
     if [[ "$USE_RELEASES" == "1" ]]; then
       deploy_releases
     else
