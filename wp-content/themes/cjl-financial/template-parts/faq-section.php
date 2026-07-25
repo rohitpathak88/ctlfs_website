@@ -63,13 +63,13 @@ usort($faqs, function($a, $b) {
                         <div class="accordion-item bg-transparent border-secondary pb-3">
                             <h2 class="accordion-header align-items-center d-flex">
                                 <span style="font-size:20px;color:#FF704C;" class="fw-bold"><?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?>-</span>
-                                <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq<?php echo $index + 1; ?>">
+                                <button class="text-break accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq<?php echo $index + 1; ?>">
                                     <?php echo esc_html($faq['question']); ?>
                                 </button>
                             </h2>
                             <div id="faq<?php echo $index + 1; ?>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body lead">
-                                    <p class="ps-4"><?php echo wp_kses_post($faq['answer']); ?></p>
+                                    <p class="ps-4 text-break"><?php echo wp_kses_post($faq['answer']); ?></p>
                                 </div>
                             </div>
                         </div>

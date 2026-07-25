@@ -22,15 +22,17 @@ $default_alliances = array(
 );
 
 $alliances = array();
-
+$show_Hidde = false;
 // Get logos from meta
 if ($alliances_query->have_posts()) {
     while ($alliances_query->have_posts()) {
         $alliances_query->the_post();
-
+        
         $logos = get_post_meta(get_the_ID(), '_alliance_logos', true);
-
+        
         if (is_array($logos)) {
+            $show_Hidde = true;
+            
             foreach ($logos as $logo) {
                 if (empty($logo['image'])) {
                     continue;
@@ -63,67 +65,69 @@ $alliances = array_slice($alliances, 0, 5);
 ?>
 
 <!-- Trusted Alliances Section -->
-<section class="alliances-section"
-    style="background-image:url(<?php echo esc_url(cjl_get_image_url('our_trusted_alliances_bg.png')); ?>);
-           background-position: bottom;
-           background-repeat: no-repeat;">
+<?php if($show_Hidde == true){?>
+    <section class="alliances-section"
+        style="background-image:url(<?php echo esc_url(cjl_get_image_url('our_trusted_alliances_bg.png')); ?>);
+            background-position: bottom;
+            background-repeat: no-repeat;">
 
-    <div class="container custom_container">
-        <h2 class="text-center back_white_text_gradient title fw-light mb-5 mb-md-0">
-            Our Trusted Alliances
-        </h2>
+        <div class="container custom_container">
+            <h2 class="text-center back_white_text_gradient title fw-light mb-5 mb-md-0">
+                Our Trusted Alliances
+            </h2>
 
-        <div class="row">
+            <div class="row">
 
-            <!-- LEFT -->
-            <div class="col-md-5">
-                <div class="row">
-                    <?php for ($i = 0; $i < 2; $i++): if (!isset($alliances[$i])) continue; ?>
-                        <div class="col-sm-12 col-md-6 mb-4">
-                            <div class="alliance-logo p-4 <?php
-                                echo ($alliances[$i]['position'] !== 0)
-                                    ? 'position-relative alliance-logo-top-' . esc_attr($alliances[$i]['position'])
-                                    : '';
-                            ?>">
-                                <img class="img-fluid"
-                                     src="<?php echo esc_url($alliances[$i]['image']); ?>"
-                                     alt="<?php echo esc_attr($alliances[$i]['alt']); ?>">
+                <!-- LEFT -->
+                <div class="col-md-5">
+                    <div class="row">
+                        <?php for ($i = 0; $i < 2; $i++): if (!isset($alliances[$i])) continue; ?>
+                            <div class="col-sm-12 col-md-6 mb-4">
+                                <div class="alliance-logo p-4 <?php
+                                    echo ($alliances[$i]['position'] !== 0)
+                                        ? 'position-relative alliance-logo-top-' . esc_attr($alliances[$i]['position'])
+                                        : '';
+                                ?>">
+                                    <img class="img-fluid"
+                                        src="<?php echo esc_url($alliances[$i]['image']); ?>"
+                                        alt="<?php echo esc_attr($alliances[$i]['alt']); ?>">
+                                </div>
                             </div>
-                        </div>
-                    <?php endfor; ?>
-                </div>
-            </div>
-
-            <!-- CENTER -->
-            <?php if (isset($alliances[2])): ?>
-                <div class="col-sm-12 col-md-2 text-center mb-4">
-                    <div class="alliance-logo p-4 position-relative alliance-logo-top-<?php echo esc_attr($alliances[2]['position']); ?>">
-                        <img class="img-fluid"
-                             src="<?php echo esc_url($alliances[2]['image']); ?>"
-                             alt="<?php echo esc_attr($alliances[2]['alt']); ?>">
+                        <?php endfor; ?>
                     </div>
                 </div>
-            <?php endif; ?>
 
-            <!-- RIGHT -->
-            <div class="col-md-5">
-                <div class="row">
-                    <?php for ($i = 3; $i < 5; $i++): if (!isset($alliances[$i])) continue; ?>
-                        <div class="col-sm-12 col-md-6 mb-4">
-                            <div class="alliance-logo p-4 <?php
-                                echo ($alliances[$i]['position'] !== 0)
-                                    ? 'position-relative alliance-logo-top-' . esc_attr($alliances[$i]['position'])
-                                    : '';
-                            ?>">
-                                <img class="img-fluid"
-                                     src="<?php echo esc_url($alliances[$i]['image']); ?>"
-                                     alt="<?php echo esc_attr($alliances[$i]['alt']); ?>">
-                            </div>
+                <!-- CENTER -->
+                <?php if (isset($alliances[2])): ?>
+                    <div class="col-sm-12 col-md-2 text-center mb-4">
+                        <div class="alliance-logo p-4 position-relative alliance-logo-top-<?php echo esc_attr($alliances[2]['position']); ?>">
+                            <img class="img-fluid"
+                                src="<?php echo esc_url($alliances[2]['image']); ?>"
+                                alt="<?php echo esc_attr($alliances[2]['alt']); ?>">
                         </div>
-                    <?php endfor; ?>
-                </div>
-            </div>
+                    </div>
+                <?php endif; ?>
 
+                <!-- RIGHT -->
+                <div class="col-md-5">
+                    <div class="row">
+                        <?php for ($i = 3; $i < 5; $i++): if (!isset($alliances[$i])) continue; ?>
+                            <div class="col-sm-12 col-md-6 mb-4">
+                                <div class="alliance-logo p-4 <?php
+                                    echo ($alliances[$i]['position'] !== 0)
+                                        ? 'position-relative alliance-logo-top-' . esc_attr($alliances[$i]['position'])
+                                        : '';
+                                ?>">
+                                    <img class="img-fluid"
+                                        src="<?php echo esc_url($alliances[$i]['image']); ?>"
+                                        alt="<?php echo esc_attr($alliances[$i]['alt']); ?>">
+                                </div>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+<?php  } ?>

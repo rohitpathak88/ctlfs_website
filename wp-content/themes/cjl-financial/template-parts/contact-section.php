@@ -59,7 +59,7 @@ $contact_description = get_theme_mod('cjl_contact_description', 'Lorem ipsum dol
                         </div>
                         <div>
                             <small class="lead text-uppercase mb-2">Service Area</small>
-                            <p><?php echo esc_html($address); ?></p>
+                            <p><?php echo wp_kses_post( $address ); ?></p>
                         </div>
                     </div>
                 </div>

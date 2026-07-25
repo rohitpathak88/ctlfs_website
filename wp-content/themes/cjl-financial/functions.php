@@ -150,7 +150,7 @@ function cjl_financial_register_post_types() {
         ),
         'public' => true,
         'has_archive' => true,
-        'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
+        'supports' => array('title', 'editor', 'thumbnail', 'page-attributes', 'custom-fields'),
         'menu_icon' => 'dashicons-businessman',
         'rewrite' => array('slug' => 'services'),
     ));
@@ -196,6 +196,29 @@ function cjl_financial_register_post_types() {
         'menu_icon' => 'dashicons-editor-help',
         'rewrite' => array('slug' => 'faq'),
     ));
+
+    // Marquee
+    register_post_type('marquee', array(
+        'labels' => array(
+            'name' => 'Marquee Item',
+            'singular_name' => 'Marquee',
+            'add_new' => 'Add New Marquee',
+            'add_new_item' => 'Add New Marquee',
+            'edit_item' => 'Edit Marquee',
+            'new_item' => 'New Marquee',
+            'view_item' => 'View Marquee',
+            'search_items' => 'Search Marquee Item',
+            'not_found' => 'No marquee Item found',
+            'not_found_in_trash' => 'No marquee item found in Trash'
+        ),
+        'public' => true,
+        'has_archive' => true,
+        'supports' => array('title'),
+        'menu_icon' => 'dashicons-businessman',
+        'rewrite' => array('slug' => 'marquee'),
+    ));
+
+    
 }
 add_action('init', 'cjl_financial_register_post_types');
 
@@ -896,6 +919,7 @@ function cjl_financial_customize_register($wp_customize) {
         'type' => 'url',
         'priority' => 35,
     ));
+    
 }
 add_action('customize_register', 'cjl_financial_customize_register');
 
@@ -905,3 +929,217 @@ add_action('customize_register', 'cjl_financial_customize_register');
 function cjl_get_image_url($filename) {
     return get_template_directory_uri() . '/assets/img/' . $filename;
 }
+
+
+function custom_about_us_customize_register($wp_customize) {
+
+    // Section
+    $wp_customize->add_section('about_us_section', array(
+        'title' => __('About Us Section', 'your-textdomain'),
+        'priority' => 30,
+    ));
+
+    // Image
+    $wp_customize->add_setting('about_us_image', array(
+        'default' => get_template_directory_uri() . '/assets/images/about_us_img.png',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'about_us_image_control', array(
+        'label' => __('About Us Image', 'your-textdomain'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_image',
+    )));
+
+    // About Us Heading
+    $wp_customize->add_setting('about_us_heading', array(
+        'default' => 'About Us',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('about_us_heading_control', array(
+        'label' => __('About Us Heading', 'your-textdomain'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_heading',
+        'type' => 'text',
+    ));
+
+    // About Us Content
+    $wp_customize->add_setting('about_us_content', array(
+        'default' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, um dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur... Lorem ipsum dolor sit amet, consectetur adipiscing elit, um dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur...',
+        'sanitize_callback' => 'wp_kses_post',
+    ));
+
+    $wp_customize->add_control('about_us_content_control', array(
+        'label' => __('About Us Content', 'your-textdomain'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_content',
+        'type' => 'textarea',
+    ));
+
+    // Vision Heading & Content
+    $wp_customize->add_setting('about_us_vision_heading', array(
+        'default' => 'Our Vision',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('about_us_vision_heading_control', array(
+        'label' => __('Vision Heading', 'your-textdomain'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_vision_heading',
+        'type' => 'text',
+    ));
+
+    $wp_customize->add_setting('about_us_vision_content', array(
+        'default' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, um dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur... Lorem ipsum dolor sit amet, consectetur adipiscing elit, um dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur...',
+        'sanitize_callback' => 'wp_kses_post',
+    ));
+    $wp_customize->add_control('about_us_vision_content_control', array(
+        'label' => __('Vision Content', 'your-textdomain'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_vision_content',
+        'type' => 'textarea',
+    ));
+
+    // Mission Heading & Content
+    $wp_customize->add_setting('about_us_mission_heading', array(
+        'default' => 'Our Mission',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('about_us_mission_heading_control', array(
+        'label' => __('Mission Heading', 'your-textdomain'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_mission_heading',
+        'type' => 'text',
+    ));
+
+    $wp_customize->add_setting('about_us_mission_content', array(
+        'default' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, um dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur... Lorem ipsum dolor sit amet, consectetur adipiscing elit, um dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur...',
+        'sanitize_callback' => 'wp_kses_post',
+    ));
+    $wp_customize->add_control('about_us_mission_content_control', array(
+        'label' => __('Mission Content', 'your-textdomain'),
+        'section' => 'about_us_section',
+        'settings' => 'about_us_mission_content',
+        'type' => 'textarea',
+    ));
+
+}
+add_action('customize_register', 'custom_about_us_customize_register');
+
+
+
+function cjl_customize_why_choose_section($wp_customize) {
+
+    // Section
+    $wp_customize->add_section('why_choose_section', array(
+        'title'       => __('Why Choose Us Section', 'cjl'),
+        'priority'    => 30,
+        'description' => __('Customize the Why Choose Us section content.', 'cjl'),
+    ));
+
+    // Section Title
+    $wp_customize->add_setting('why_choose_title', array(
+        'default'           => 'Why Choose Us?',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_title', array(
+        'label'    => __('Section Title', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    // Section Description
+    $wp_customize->add_setting('why_choose_desc', array(
+        'default'           => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        'sanitize_callback' => 'sanitize_textarea_field',
+    ));
+    $wp_customize->add_control('why_choose_desc', array(
+        'label'    => __('Section Description', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'textarea',
+    ));
+
+    // Left Column Cards
+    $wp_customize->add_setting('why_choose_card_1_number', array(
+        'default'           => '1.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_1_number', array(
+        'label'    => __('Left Card 1 Number', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_1_title', array(
+        'default'           => 'Scale Without Complexity',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_1_title', array(
+        'label'    => __('Left Card 1 Title', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_2_number', array(
+        'default'           => '2.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_2_number', array(
+        'label'    => __('Left Card 2 Number', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_2_title', array(
+        'default'           => 'Scale Without Complexity',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_2_title', array(
+        'label'    => __('Left Card 2 Title', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    // Right Column Cards
+    $wp_customize->add_setting('why_choose_card_3_number', array(
+        'default'           => '3.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_3_number', array(
+        'label'    => __('Right Card 1 Number', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_3_title', array(
+        'default'           => 'Scale Without Complexity',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_3_title', array(
+        'label'    => __('Right Card 1 Title', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_4_number', array(
+        'default'           => '4.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_4_number', array(
+        'label'    => __('Right Card 2 Number', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+
+    $wp_customize->add_setting('why_choose_card_4_title', array(
+        'default'           => 'Scale Without Complexity',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('why_choose_card_4_title', array(
+        'label'    => __('Right Card 2 Title', 'cjl'),
+        'section'  => 'why_choose_section',
+        'type'     => 'text',
+    ));
+}
+add_action('customize_register', 'cjl_customize_why_choose_section');
+

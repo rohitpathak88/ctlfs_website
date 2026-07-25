@@ -25,63 +25,105 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <?php
-                wp_nav_menu(array(
+                 wp_nav_menu([
                     'theme_location' => 'primary',
-                    'container' => false,
-                    'menu_class' => 'navbar-nav ms-auto',
-                    'fallback_cb' => '__return_false',
-                    'items_wrap' => '<ul class="navbar-nav ms-auto">%3$s</ul>',
-                    'walker' => new class extends Walker_Nav_Menu {
-                        function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
-                            $classes = empty($item->classes) ? array() : (array) $item->classes;
-                            $classes[] = 'nav-item';
-                            
-                            $class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args));
-                            $class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
-                            
-                            $output .= '<li' . $class_names . '>';
-                            
-                            $attributes = !empty($item->attr_title) ? ' title="' . esc_attr($item->attr_title) . '"' : '';
+                    'container'      => false,
+                    'menu_class'     => 'navbar-nav ms-auto',
+                    'fallback_cb'    => '__return_false',
+                    'walker'         => new class extends Walker_Nav_Menu {
+
+                        // Start Submenu
+                        public function start_lvl(&$output, $depth = 0, $args = null) {
+                            $output .= '<ul class="dropdown-menu">';
+                        }
+
+                        // End Submenu
+                        public function end_lvl(&$output, $depth = 0, $args = null) {
+                            $output .= '</ul>';
+                        }
+
+                        // Start Menu Item
+                        public function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
+
+                            $classes = empty($item->classes) ? [] : (array) $item->classes;
+
+                            $has_children = in_array('menu-item-has-children', $classes);
+
+                            if ($has_children && $depth == 0) {
+                                $classes[] = 'dropdown';
+                            }
+
+                            if ($depth == 0) {
+                                $classes[] = 'nav-item';
+                            }
+
+                            $class_names = implode(' ', array_filter($classes));
+
+                            $output .= '<li class="' . esc_attr($class_names) . '">';
+
+                            $attributes  = '';
+                            $attributes .= !empty($item->url) ? ' href="' . esc_url($item->url) . '"' : '';
                             $attributes .= !empty($item->target) ? ' target="' . esc_attr($item->target) . '"' : '';
                             $attributes .= !empty($item->xfn) ? ' rel="' . esc_attr($item->xfn) . '"' : '';
-                            $attributes .= !empty($item->url) ? ' href="' . esc_attr($item->url) . '"' : '';
-                            
-                            $item_output = isset($args->before) ? $args->before : '';
-                            $item_output .= '<a class="nav-link"' . $attributes . '>';
-                            $item_output .= (isset($args->link_before) ? $args->link_before : '') . apply_filters('the_title', $item->title, $item->ID) . (isset($args->link_after) ? $args->link_after : '');
-                            $item_output .= '</a>';
-                            $item_output .= isset($args->after) ? $args->after : '';
-                            
-                            $output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
+
+                            // Parent menu
+                            if ($has_children && $depth == 0) {
+                                $attributes .= ' class="nav-link dropdown-toggle"';
+                                $attributes .= ' data-bs-toggle="dropdown"';
+                                $attributes .= ' role="button"';
+                                $attributes .= ' aria-expanded="false"';
+                            }
+                            // Top-level menu
+                            elseif ($depth == 0) {
+                                $attributes .= ' class="nav-link"';
+                            }
+                            // Submenu item
+                            else {
+                                $attributes .= ' class="dropdown-item"';
+                            }
+
+                            $output .= '<a' . $attributes . '>';
+                            $output .= esc_html($item->title);
+                            $output .= '</a>';
                         }
-                        
-                        function end_el(&$output, $item, $depth = 0, $args = null) {
+
+                        // End Menu Item
+                        public function end_el(&$output, $item, $depth = 0, $args = null) {
                             $output .= '</li>';
                         }
                     }
-                ));
+                ]);
                 
                 // Fallback menu if no menu is set
                 if (!has_nav_menu('primary')) { ?>
                     <ul class="navbar-nav ms-auto">
+
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo esc_url(home_url('/')); ?>">Home</a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link" href="#about">About Us</a>
+                            <a class="nav-link" href="#services-section">Services</a>
                         </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="index.html#about-us" data-bs-toggle="dropdown">
+                                About Us
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="index.html#about-us">About Us</a></li>
+                                <li><a class="dropdown-item" href="team.html">Team</a></li>
+                            </ul>
+                        </li>
+
                         <li class="nav-item">
-                            <a class="nav-link" href="#services">Services</a>
-                        </li>
+                            <a class="nav-link" href="#why_choose_us">Why Choose Us</a>
+                        </li> 
+
                         <li class="nav-item">
-                            <a class="nav-link" href="#investors">Investors</a>
+                            <a class="nav-link" href="#contact">Contact Us</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#media">Media</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#contact">Contact</a>
-                        </li>
+
                     </ul>
                 <?php } ?>
             </div>

@@ -79,10 +79,6 @@
     .services-section .service-card .card-body h5.title {
         font-size:33px;
     }
-    .services-section .service-card .card-body .sub-title{
-        font-size: 16px;
-        line-height: 24px;
-    }
     .services-section .service-card .card-body .lead{
         font-size: 1rem;
         line-height: 1.7rem;
@@ -121,7 +117,7 @@
 /* Extra large (desktops) */
 @media (min-width: 1200px) {
     .custom_container.container{
-        max-width: 1500px;
+        max-width: 1140px;
     }
     .hero-image {
         position: absolute;
@@ -142,11 +138,7 @@
     }
 
     .services-section .service-card .card-body h5.title {
-        font-size:50px;
-    }
-    .services-section .service-card .card-body .sub-title{
-        font-size: 28px;
-        line-height: 38px;
+        font-size:35px;
     }
     .services-section .service-card .card-body .lead{
         font-size: 1.1rem;

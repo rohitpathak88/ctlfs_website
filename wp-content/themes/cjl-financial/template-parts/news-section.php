@@ -34,7 +34,7 @@ $news_items = array(
 ?>
 
 <!-- News Section -->
-<section class="news-section" style="background-image:url(<?php echo esc_url(cjl_get_image_url('home_banner_top_color_gradient.png')); ?>);background-position: top; background-repeat: no-repeat;">
+<section class="news-section">
     <div class="container custom_container">
         <h2 class="text-center back_white_text_gradient title fw-light mb-5"><?php echo esc_html($news_title); ?></h2>
         <div class="row g-4">
