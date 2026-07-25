@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-md-6 m-auto text-center">
                 <h2 class="text-center back_white_text_gradient title fw-light mb-2">Worldwide Trust</h2>
-                <p class="lead mb-5"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, um dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur... </p>
+                <p class="lead mb-5"> Institutional-grade fund services designed for global investment platforms, with disciplined governance and technology-enabled precision across jurisdictions.</p>
             </div>
         </div>
         <div class="row">

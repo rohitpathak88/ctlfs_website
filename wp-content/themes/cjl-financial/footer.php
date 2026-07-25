@@ -53,7 +53,7 @@
                         ?>
                             <ul class="list-unstyled">
                                  <li class="mb-2"><a href="#about_us" class="text-white text-decoration-none">About Us</a></li>
-                                <li class="mb-2"><a href="#contact" class="text-white text-decoration-none">Our Team</a></li>
+                                <li class="mb-2"><a href="https://ctlfs.in/teams/" class="text-white text-decoration-none">Our Team</a></li>
                             </ul>
                         <?php
                     }
@@ -77,19 +77,21 @@
                     <h6 class="text-uppercase">Follow Us</h6>
                     <div class="social-links">
                         <?php
-                            $facebook = get_theme_mod('cjl_facebook', '')? get_theme_mod('cjl_facebook', ''):"#";
+                            //$facebook = get_theme_mod('cjl_facebook', '')? get_theme_mod('cjl_facebook', ''):"#";
                             $linkedin = get_theme_mod('cjl_linkedin', '') ? get_theme_mod('cjl_linkedin', ''):"#";
-                            $twitter = get_theme_mod('cjl_twitter', '') ? get_theme_mod('cjl_twitter', ''):"#";
+                            //$twitter = get_theme_mod('cjl_twitter', '') ? get_theme_mod('cjl_twitter', ''):"#";
                             
-                            if ($facebook) {
-                                echo '<a href="' . esc_url($facebook) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer"><img src="' . esc_url(cjl_get_image_url('fb.png')) . '" alt="facebook"></a>';
-                            }
+                            // if ($facebook) {
+                            //     echo '<a href="' . esc_url($facebook) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer"><img src="' . esc_url(cjl_get_image_url('fb.png')) . '" alt="facebook"></a>';
+                            // }
+
                             if ($linkedin) {
                                 echo '<a href="' . esc_url($linkedin) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer"><img src="' . esc_url(cjl_get_image_url('in.png')) . '" alt="linkedin"></a>';
                             }
-                            if ($twitter) {
-                                echo '<a href="' . esc_url($twitter) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer"><img src="' . esc_url(cjl_get_image_url('x.png')) . '" alt="x"></a>';
-                            }
+
+                            // if ($twitter) {
+                            //     echo '<a href="' . esc_url($twitter) . '" class="text-white me-3" target="_blank" rel="noopener noreferrer"><img src="' . esc_url(cjl_get_image_url('x.png')) . '" alt="x"></a>';
+                            // }
                         ?>
                     </div>
                 </div>
