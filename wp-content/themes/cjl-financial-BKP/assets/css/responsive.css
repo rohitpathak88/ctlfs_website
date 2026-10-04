@@ -1,0 +1,164 @@
+/* Extra small (phones) */
+@media (max-width: 575.98px) {
+    .contact-section .big_heading{
+        font-size:58px;
+    }
+    .contact-section .reach_out{
+        padding: 150px 15px 150px 15px;
+    }
+    .hero-section{
+        padding: 100px 0px 100px 0px;
+    }
+    .hero-image {
+        position: relative;
+        right: 0; 
+    }
+
+    .alliance-logo-top-80{
+        margin-top:0px;
+    }
+
+    .alliance-logo-top-170{
+        margin-top:0px;
+    }
+}
+
+/* Small (phones landscape) */
+@media (min-width: 576px) {
+    .custom_container.container{
+        max-width: 760px;
+    }
+    .contact-section .big_heading{
+        font-size:90px;
+    }
+    .hero-image {
+        position: relative;
+        right: 0; 
+    }
+     .hero-section{
+        padding: 0px 0px 100px 0px;
+    }
+
+    .alliance-logo:hover {
+        transform: scale(1.05);
+    }
+
+    .alliance-logo-top-80{
+        margin-top:0px;
+    }
+
+    .alliance-logo-top-170{
+        margin-top:0px;
+    }
+    
+   
+}
+
+/* Medium (tablets) */
+@media (min-width: 768px) {
+    .custom_container.container{
+        max-width: 987px;
+    }
+    .hero-image {
+        position: relative;
+        right: 0; 
+    }
+    .hero-section{
+        padding: 0px 0px 100px 0px;
+    }
+    .services-section .service-card .card-body span{
+        height: 45px;
+        width: 45px;
+        line-height: 45px;
+    }
+
+    .services-section .service-card .card-body img{
+        width: 20px;
+    }
+
+    .services-section .service-card .card-body h5.title {
+        font-size:33px;
+    }
+    .services-section .service-card .card-body .lead{
+        font-size: 1rem;
+        line-height: 1.7rem;
+    }
+
+    .alliance-logo-top-80{
+        margin-top:100px;
+    }
+
+    .alliance-logo-top-170{
+        margin-top:200px;
+    }
+    .contact-section .big_heading {
+        font-size: 90px;
+    }
+    
+}
+
+/* Large (laptops) */
+@media (min-width: 992px) {
+    .custom_container.container{
+        max-width: 1170px;
+    }
+    .hero-image {
+        position: absolute;
+        right: 0px; 
+    }
+     .hero-section{
+        padding: 250px 0 200px 0;
+    }
+    .contact-section .big_heading {
+        font-size: 100px;
+    }
+}
+
+/* Extra large (desktops) */
+@media (min-width: 1200px) {
+    .custom_container.container{
+        max-width: 1140px;
+    }
+    .hero-image {
+        position: absolute;
+        right: 50px; 
+    }
+    .hero-section{
+        padding: 250px 0 200px 0;
+    }
+
+    .services-section .service-card .card-body span{
+        height: 70px;
+        width: 70px;
+        line-height: 70px;
+    }
+
+    .services-section .service-card .card-body img{
+        width: 30px;
+    }
+
+    .services-section .service-card .card-body h5.title {
+        font-size:35px;
+    }
+    .services-section .service-card .card-body .lead{
+        font-size: 1.1rem;
+        line-height: 1.7rem;
+    }
+    .contact-section .big_heading{
+        font-size:145px;
+    }
+}
+
+/* Extra extra large (big screens) */
+@media (min-width: 1400px) {
+     .hero-image {
+        position: absolute;
+        right: 200px; 
+    }
+    .hero-section{
+        padding: 250px 0 200px 0;
+    }
+    .contact-section .big_heading {
+        font-size: 170px;
+    }
+}

@@ -20,13 +20,17 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
+
+define('DISALLOW_FILE_EDIT', true);
+define('DISALLOW_FILE_MODS', true); // optional: also block install/update from wp-admin
+
 define( 'DB_NAME', 'ctlfs' );
 
 /** Database username */
-define( 'DB_USER', 'ctlfs' );
+define( 'DB_USER', 'root' );
 
 /** Database password */
-define( 'DB_PASSWORD', 'zYJPO7izdptFqKuUQClk1Z76' );
+define( 'DB_PASSWORD', 'R@@t@!23' );
 
 /** Database hostname */
 define( 'DB_HOST', 'localhost' );
